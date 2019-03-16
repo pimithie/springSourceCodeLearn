@@ -580,6 +580,7 @@ class ConstructorResolver {
 						beanFactory.getAccessControlContext());
 			}
 			else {
+				// 调用工厂方法实例化bean
 				beanInstance = this.beanFactory.getInstantiationStrategy().instantiate(
 						mbd, beanName, this.beanFactory, factoryBean, factoryMethodToUse, argsToUse);
 			}
