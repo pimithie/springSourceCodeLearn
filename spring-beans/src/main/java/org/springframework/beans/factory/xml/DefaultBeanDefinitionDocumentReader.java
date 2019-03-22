@@ -95,6 +95,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		this.readerContext = readerContext;
 		logger.debug("Loading bean definitions");
 		Element root = doc.getDocumentElement();
+		// 开始注册BeanDefinition
 		doRegisterBeanDefinitions(root);
 	}
 
@@ -144,8 +145,13 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 
+		// 子类实现preProcessXml方法进行预处理
+		// 当前类默认不进行任何处理
 		preProcessXml(root);
+		// 解析BeanDefinition
 		parseBeanDefinitions(root, this.delegate);
+		// 子类实现postProcessXml方法进行后置处理
+		// 当前类默认不进行任何处理
 		postProcessXml(root);
 
 		this.delegate = parent;
@@ -307,6 +313,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 			try {
 				// Register the final decorated instance.
+				// 注册BeanDefinition
 				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
 			}
 			catch (BeanDefinitionStoreException ex) {
