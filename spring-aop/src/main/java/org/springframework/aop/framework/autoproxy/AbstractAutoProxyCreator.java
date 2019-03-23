@@ -286,6 +286,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) {
+		// 不做任何处理，直接返回
 		return bean;
 	}
 
@@ -297,8 +298,10 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	@Override
 	public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) throws BeansException {
 		if (bean != null) {
+			// 获取目标bean的name
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
 			if (this.earlyProxyReferences.remove(cacheKey) != bean) {
+				// 进行包装，其实就是产生代理对象
 				return wrapIfNecessary(bean, beanName, cacheKey);
 			}
 		}
