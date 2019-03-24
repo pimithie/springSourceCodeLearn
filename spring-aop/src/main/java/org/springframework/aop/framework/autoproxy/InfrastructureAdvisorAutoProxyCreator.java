@@ -36,8 +36,8 @@ public class InfrastructureAdvisorAutoProxyCreator extends AbstractAdvisorAutoPr
 
 	@Override
 	protected void initBeanFactory(ConfigurableListableBeanFactory beanFactory) {
-		super.initBeanFactory(beanFactory);
-		this.beanFactory = beanFactory;
+			super.initBeanFactory(beanFactory);
+			this.beanFactory = beanFactory;
 	}
 
 	@Override
