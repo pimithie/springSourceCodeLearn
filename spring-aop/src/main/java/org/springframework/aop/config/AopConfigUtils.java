@@ -120,7 +120,7 @@ public abstract class AopConfigUtils {
 			Class<?> cls, BeanDefinitionRegistry registry, @Nullable Object source) {
 
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
-		// 判断容器是否包含名称为org.springframework.aop.config.internalAutoProxyCreator的bean
+		// 判断容器是否包含name为org.springframework.aop.config.internalAutoProxyCreator的bean
 		// 这是容器内部自动代理创建器组件(bean)的名称
 		if (registry.containsBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME)) {
 			BeanDefinition apcDefinition = registry.getBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME);
