@@ -860,10 +860,12 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			throws ServletException, IOException {
 
 		HttpMethod httpMethod = HttpMethod.resolve(request.getMethod());
+		// 获取http 请求方法为空，或为Patch，则自己处理
 		if (httpMethod == HttpMethod.PATCH || httpMethod == null) {
 			processRequest(request, response);
 		}
 		else {
+			// 否则，交给父类
 			super.service(request, response);
 		}
 	}
@@ -987,6 +989,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		initContextHolders(request, localeContext, requestAttributes);
 
 		try {
+			// 子类（dispatcherServlet）实现
+			// 处理请求的入口
 			doService(request, response);
 		}
 		catch (ServletException | IOException ex) {
