@@ -503,6 +503,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		try {
 			// 创建容器
 			this.webApplicationContext = initWebApplicationContext();
+			// 默认实现为空，留给子类重写
 			initFrameworkServlet();
 		}
 		catch (ServletException | RuntimeException ex) {
@@ -568,7 +569,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			// support or the context injected at construction time had already been
 			// refreshed -> trigger initial onRefresh manually here.
 			synchronized (this.onRefreshMonitor) {
-				// 默认为空实现，子类重写
+				// 默认为空实现，子类(DispatcherSerlvet)重写，用以初始化springMVC的组件
 				onRefresh(wac);
 			}
 		}
