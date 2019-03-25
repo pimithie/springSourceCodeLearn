@@ -179,6 +179,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	private String namespace;
 
 	/** Explicit context config location */
+	// 显示指定的配置文件的路径
 	@Nullable
 	private String contextConfigLocation;
 
@@ -206,6 +207,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	private boolean dispatchTraceRequest = false;
 
 	/** WebApplicationContext for this servlet */
+	// 子容器
 	@Nullable
 	private WebApplicationContext webApplicationContext;
 
@@ -499,6 +501,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		long startTime = System.currentTimeMillis();
 
 		try {
+			// 创建容器
 			this.webApplicationContext = initWebApplicationContext();
 			initFrameworkServlet();
 		}
@@ -524,6 +527,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * @see #setContextConfigLocation
 	 */
 	protected WebApplicationContext initWebApplicationContext() {
+		// 获取根容器
 		WebApplicationContext rootContext =
 				WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		WebApplicationContext wac = null;
@@ -539,6 +543,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 					if (cwac.getParent() == null) {
 						// The context instance was injected without an explicit parent -> set
 						// the root application context (if any; may be null) as the parent
+						// 将根容器设置为子容器的父容器
 						cwac.setParent(rootContext);
 					}
 					configureAndRefreshWebApplicationContext(cwac);
@@ -554,6 +559,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		}
 		if (wac == null) {
 			// No context instance is defined for this servlet -> create a local one
+			// 创建容器
 			wac = createWebApplicationContext(rootContext);
 		}
 
@@ -562,12 +568,14 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			// support or the context injected at construction time had already been
 			// refreshed -> trigger initial onRefresh manually here.
 			synchronized (this.onRefreshMonitor) {
+				// 默认为空实现，子类重写
 				onRefresh(wac);
 			}
 		}
 
 		if (this.publishContext) {
 			// Publish the context as a servlet context attribute.
+			// 将子容器设置到ServletContext域中
 			String attrName = getServletContextAttributeName();
 			getServletContext().setAttribute(attrName, wac);
 			if (this.logger.isDebugEnabled()) {
