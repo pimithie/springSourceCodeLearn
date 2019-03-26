@@ -546,9 +546,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
+				// 初始化事件multicaster
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				// 子类重写调用
 				onRefresh();
 
 				// Check for listener beans and register them.
@@ -560,6 +562,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+				// 完成容器的刷新，发布对应的事件
 				finishRefresh();
 			}
 
@@ -602,10 +605,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment.
+		// 初始化属性源
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable:
 		// see ConfigurablePropertyResolver#setRequiredProperties
+		// 校验所有的必要属性
 		getEnvironment().validateRequiredProperties();
 
 		// Store pre-refresh ApplicationListeners...

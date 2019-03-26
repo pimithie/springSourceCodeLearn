@@ -803,6 +803,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				applyCacheSeconds(response, this.cacheSecondsForSessionAttributeHandlers);
 			}
 			else {
+				// 准备相应
 				prepareResponse(response);
 			}
 		}
@@ -895,10 +896,11 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			if (asyncManager.isConcurrentHandlingStarted()) {
 				return null;
 			}
-
+			// 获取modelAndView对象
 			return getModelAndView(mavContainer, modelFactory, webRequest);
 		}
 		finally {
+			// 执行请求完成回调
 			webRequest.requestCompleted();
 		}
 	}
