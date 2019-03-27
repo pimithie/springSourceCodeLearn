@@ -89,8 +89,10 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	private boolean detectHandlerMethodsInAncestorContexts = false;
 
 	@Nullable
+	// mapping的命名策略
 	private HandlerMethodMappingNamingStrategy<T> namingStrategy;
 
+	// mapping注册中心
 	private final MappingRegistry mappingRegistry = new MappingRegistry();
 
 
@@ -485,12 +487,15 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 		private final Map<T, HandlerMethod> mappingLookup = new LinkedHashMap<>();
 
+		// 根据url路径获取handler
 		private final MultiValueMap<String, T> urlLookup = new LinkedMultiValueMap<>();
 
+		// 根据mapping的name获取handler
 		private final Map<String, List<HandlerMethod>> nameLookup = new ConcurrentHashMap<>();
 
 		private final Map<HandlerMethod, CorsConfiguration> corsLookup = new ConcurrentHashMap<>();
 
+		// 读写锁
 		private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
 		/**
@@ -528,6 +533,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		/**
 		 * Acquire the read lock when using getMappings and getMappingsByUrl.
 		 */
+		// 获取读锁
 		public void acquireReadLock() {
 			this.readWriteLock.readLock().lock();
 		}
@@ -535,26 +541,32 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		/**
 		 * Release the read lock after using getMappings and getMappingsByUrl.
 		 */
+		// 释放读锁
 		public void releaseReadLock() {
 			this.readWriteLock.readLock().unlock();
 		}
 
 		public void register(T mapping, Object handler, Method method) {
+			// 获取写锁
 			this.readWriteLock.writeLock().lock();
 			try {
+				// 创建HandlerMethod
 				HandlerMethod handlerMethod = createHandlerMethod(handler, method);
 				assertUniqueMethodMapping(handlerMethod, mapping);
+				// 注册mapping+HandlerMethod
 				this.mappingLookup.put(mapping, handlerMethod);
 
 				if (logger.isInfoEnabled()) {
 					logger.info("Mapped \"" + mapping + "\" onto " + handlerMethod);
 				}
 
+				// 获取mapping对应的url并注册
 				List<String> directUrls = getDirectUrls(mapping);
 				for (String url : directUrls) {
 					this.urlLookup.add(url, mapping);
 				}
 
+				// 获取mapping的name并注册
 				String name = null;
 				if (getNamingStrategy() != null) {
 					name = getNamingStrategy().getName(handlerMethod, mapping);
