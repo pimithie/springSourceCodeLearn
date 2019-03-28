@@ -68,14 +68,19 @@ import org.springframework.web.util.UrlPathHelper;
 public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport implements HandlerMapping, Ordered {
 
 	@Nullable
+	// 默认的handler
 	private Object defaultHandler;
 
+	// url路径工具类
 	private UrlPathHelper urlPathHelper = new UrlPathHelper();
 
+	// 路径匹配器
 	private PathMatcher pathMatcher = new AntPathMatcher();
 
+	// 配置的拦截器数组
 	private final List<Object> interceptors = new ArrayList<>();
 
+	// 初始化好的拦截器数组
 	private final List<HandlerInterceptor> adaptedInterceptors = new ArrayList<>();
 
 	private final UrlBasedCorsConfigurationSource globalCorsConfigSource = new UrlBasedCorsConfigurationSource();
@@ -239,8 +244,11 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	 */
 	@Override
 	protected void initApplicationContext() throws BeansException {
+		// 由子类实现，注册额外的拦截器
 		extendInterceptors(this.interceptors);
+		// 扫描当前容器和父容器中所有的MappedInterceptor
 		detectMappedInterceptors(this.adaptedInterceptors);
+		// 对所有注册的拦截器进行适配
 		initInterceptors();
 	}
 
@@ -264,6 +272,8 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	 * @param mappedInterceptors an empty list to add {@link MappedInterceptor} instances to
 	 */
 	protected void detectMappedInterceptors(List<HandlerInterceptor> mappedInterceptors) {
+		// 去当前容器和父容器中寻找MappedInterceptor
+		// MappedInterceptor会根据url请求路径进行相应的拦截
 		mappedInterceptors.addAll(
 				BeanFactoryUtils.beansOfTypeIncludingAncestors(
 						obtainApplicationContext(), MappedInterceptor.class, true, false).values());
@@ -347,19 +357,24 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	@Override
 	@Nullable
 	public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+		// getHandlerInternal由子类实现，模板设计模式
 		Object handler = getHandlerInternal(request);
+		// 未获取到，获取默认的handler
 		if (handler == null) {
 			handler = getDefaultHandler();
 		}
+		// 依然为null，返回null
 		if (handler == null) {
 			return null;
 		}
 		// Bean name or resolved handler?
+		// 返回的handler为String，将其当做bean的name去容器getBean
 		if (handler instanceof String) {
 			String handlerName = (String) handler;
 			handler = obtainApplicationContext().getBean(handlerName);
 		}
 
+		// 获取HandlerExecutionChain
 		HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
 		if (CorsUtils.isCorsRequest(request)) {
 			CorsConfiguration globalConfig = this.globalCorsConfigSource.getCorsConfiguration(request);
