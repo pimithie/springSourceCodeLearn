@@ -424,12 +424,17 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	 * @return the HandlerExecutionChain (never {@code null})
 	 * @see #getAdaptedInterceptors()
 	 */
+	// 返回一个一个HandlerExecutionChain，包含handler，common interceptors(拦截全部请求)，MappedInterceptor(匹配对应的路径)
 	protected HandlerExecutionChain getHandlerExecutionChain(Object handler, HttpServletRequest request) {
+		// 判断handler对象是否已经是一个HandlerExecutionChain对象，若是，则用这个HandlerExecutionChain，否则创建一个
 		HandlerExecutionChain chain = (handler instanceof HandlerExecutionChain ?
 				(HandlerExecutionChain) handler : new HandlerExecutionChain(handler));
 
+		// 获取请求的路径
 		String lookupPath = this.urlPathHelper.getLookupPathForRequest(request);
+		// 遍历所有一个适配的Interceptors
 		for (HandlerInterceptor interceptor : this.adaptedInterceptors) {
+			// 为MappedInterceptor实例，则进行路径匹配
 			if (interceptor instanceof MappedInterceptor) {
 				MappedInterceptor mappedInterceptor = (MappedInterceptor) interceptor;
 				if (mappedInterceptor.matches(lookupPath, this.pathMatcher)) {
@@ -437,6 +442,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 				}
 			}
 			else {
+				// 否则全部加入到HandlerExecutionChain中
 				chain.addInterceptor(interceptor);
 			}
 		}
