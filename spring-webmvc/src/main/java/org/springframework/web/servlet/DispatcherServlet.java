@@ -828,15 +828,20 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@SuppressWarnings("unchecked")
 	protected <T> List<T> getDefaultStrategies(ApplicationContext context, Class<T> strategyInterface) {
+		// 获取策略(DispatcherServlet.properties文件中定义)的value
 		String key = strategyInterface.getName();
 		String value = defaultStrategies.getProperty(key);
 		if (value != null) {
+			// 基于','分割value，获取className
 			String[] classNames = StringUtils.commaDelimitedListToStringArray(value);
 			List<T> strategies = new ArrayList<>(classNames.length);
 			for (String className : classNames) {
 				try {
+					// 获取字节码对象
 					Class<?> clazz = ClassUtils.forName(className, DispatcherServlet.class.getClassLoader());
+					// 创建默认的策略
 					Object strategy = createDefaultStrategy(context, clazz);
+					// 添加到策略中
 					strategies.add((T) strategy);
 				}
 				catch (ClassNotFoundException ex) {
