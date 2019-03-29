@@ -56,26 +56,35 @@ public class HandlerMethod {
 	/** Logger that is available to subclasses */
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	// 当前处理器(controller)
 	private final Object bean;
 
 	@Nullable
+	// IOC容器
 	private final BeanFactory beanFactory;
 
+	// 处理器的类型
 	private final Class<?> beanType;
 
+	// 对应的处理器的方法对象(如@requestMapping匹配的方法对象)
 	private final Method method;
 
+	//桥接的方法
 	private final Method bridgedMethod;
 
+	// 调用方法时的参数
 	private final MethodParameter[] parameters;
 
 	@Nullable
+	// http响应状态
 	private HttpStatus responseStatus;
 
 	@Nullable
+	// http响应状态的原因
 	private String responseStatusReason;
 
 	@Nullable
+	// 当前HandlerMethod对象从哪个HandlerMethod中解析得来的
 	private HandlerMethod resolvedFromHandlerMethod;
 
 
@@ -125,6 +134,7 @@ public class HandlerMethod {
 		if (beanType == null) {
 			throw new IllegalStateException("Cannot resolve bean type for bean with name '" + beanName + "'");
 		}
+		// 初始化HandlerMethod的属性
 		this.beanType = ClassUtils.getUserClass(beanType);
 		this.method = method;
 		this.bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);
@@ -165,10 +175,11 @@ public class HandlerMethod {
 		this.resolvedFromHandlerMethod = handlerMethod;
 	}
 
-
+	// 初始化方法的参数
 	private MethodParameter[] initMethodParameters() {
 		int count = this.bridgedMethod.getParameterCount();
 		MethodParameter[] result = new MethodParameter[count];
+		// 逐个解析桥接方法中的参数
 		for (int i = 0; i < count; i++) {
 			HandlerMethodParameter parameter = new HandlerMethodParameter(i);
 			GenericTypeResolver.resolveParameterType(parameter, this.beanType);
