@@ -309,14 +309,18 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	/**
 	 * Look up a handler method for the given request.
 	 */
+	// 根据当前的请求寻找对应的处理器Method
 	@Override
 	protected HandlerMethod getHandlerInternal(HttpServletRequest request) throws Exception {
+		// 获取请求路径
 		String lookupPath = getUrlPathHelper().getLookupPathForRequest(request);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Looking up handler method for path " + lookupPath);
 		}
+		// 加锁
 		this.mappingRegistry.acquireReadLock();
 		try {
+			// 根据请求路径获取HandlerMethod
 			HandlerMethod handlerMethod = lookupHandlerMethod(lookupPath, request);
 			if (logger.isDebugEnabled()) {
 				if (handlerMethod != null) {
@@ -344,6 +348,8 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	 */
 	@Nullable
 	protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
+		// 存放所有的HandlerMethod和其匹配的路径的集合
+		// tip：Match对象封装了HandlerMethod和其匹配的路径
 		List<Match> matches = new ArrayList<>();
 		List<T> directPathMatches = this.mappingRegistry.getMappingsByUrl(lookupPath);
 		if (directPathMatches != null) {
@@ -355,6 +361,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		}
 
 		if (!matches.isEmpty()) {
+			// 根据当前请求，对所有的Match进行排序，获取最佳的匹配
 			Comparator<Match> comparator = new MatchComparator(getMappingComparator(request));
 			matches.sort(comparator);
 			if (logger.isTraceEnabled()) {
@@ -373,11 +380,13 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 							request.getRequestURL() + "': {" + m1 + ", " + m2 + "}");
 				}
 			}
+			// 将最佳匹配的HandlerMethod放入request域
 			request.setAttribute(BEST_MATCHING_HANDLER_ATTRIBUTE, bestMatch.handlerMethod);
 			handleMatch(bestMatch.mapping, lookupPath, request);
 			return bestMatch.handlerMethod;
 		}
 		else {
+			// 没有对应的HandlerMethod匹配
 			return handleNoMatch(this.mappingRegistry.getMappings().keySet(), lookupPath, request);
 		}
 	}

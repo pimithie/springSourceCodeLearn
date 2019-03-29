@@ -45,14 +45,18 @@ import org.springframework.web.servlet.ModelAndView;
 public final class MappedInterceptor implements HandlerInterceptor {
 
 	@Nullable
+	// include路径
 	private final String[] includePatterns;
 
 	@Nullable
+	// exclude路径
 	private final String[] excludePatterns;
 
+	// 拦截器对象
 	private final HandlerInterceptor interceptor;
 
 	@Nullable
+	// 路径匹配器
 	private PathMatcher pathMatcher;
 
 
@@ -143,18 +147,22 @@ public final class MappedInterceptor implements HandlerInterceptor {
 	 * @param pathMatcher a path matcher for path pattern matching
 	 * @return {@code true} if the interceptor applies to the given request path
 	 */
+	// 路径匹配逻辑
 	public boolean matches(String lookupPath, PathMatcher pathMatcher) {
 		PathMatcher pathMatcherToUse = (this.pathMatcher != null ? this.pathMatcher : pathMatcher);
 		if (!ObjectUtils.isEmpty(this.excludePatterns)) {
+			// 先匹配exclude路径，若匹配，则直接返回false
 			for (String pattern : this.excludePatterns) {
 				if (pathMatcherToUse.match(pattern, lookupPath)) {
 					return false;
 				}
 			}
 		}
+		// 若include路径为空，则默认全部拦截
 		if (ObjectUtils.isEmpty(this.includePatterns)) {
 			return true;
 		}
+		// 匹配include路径
 		for (String pattern : this.includePatterns) {
 			if (pathMatcherToUse.match(pattern, lookupPath)) {
 				return true;
@@ -164,6 +172,7 @@ public final class MappedInterceptor implements HandlerInterceptor {
 	}
 
 	@Override
+	// 调用拦截器的前置处理
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 
@@ -171,6 +180,7 @@ public final class MappedInterceptor implements HandlerInterceptor {
 	}
 
 	@Override
+	// 调用拦截器的后置处理
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			@Nullable ModelAndView modelAndView) throws Exception {
 
@@ -178,6 +188,7 @@ public final class MappedInterceptor implements HandlerInterceptor {
 	}
 
 	@Override
+	// 调用拦截器的完成处理回调
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
 			@Nullable Exception ex) throws Exception {
 
