@@ -432,7 +432,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 
 		// 获取请求的路径
 		String lookupPath = this.urlPathHelper.getLookupPathForRequest(request);
-		// 遍历所有一个适配的Interceptors
+		// 遍历所有适配的Interceptors
 		for (HandlerInterceptor interceptor : this.adaptedInterceptors) {
 			// 为MappedInterceptor实例，则进行路径匹配
 			if (interceptor instanceof MappedInterceptor) {
@@ -442,7 +442,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 				}
 			}
 			else {
-				// 否则全部加入到HandlerExecutionChain中
+				// 否则(即为common interceptor)加入到HandlerExecutionChain中
 				chain.addInterceptor(interceptor);
 			}
 		}

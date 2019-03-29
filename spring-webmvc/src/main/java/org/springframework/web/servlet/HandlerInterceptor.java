@@ -94,6 +94,7 @@ public interface HandlerInterceptor {
 	 * that this interceptor has already dealt with the response itself.
 	 * @throws Exception in case of errors
 	 */
+	// 前置处理
 	default boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 
@@ -120,6 +121,7 @@ public interface HandlerInterceptor {
 	 * (can also be {@code null})
 	 * @throws Exception in case of errors
 	 */
+	// 后置处理（响应未返回给客户端）
 	default void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			@Nullable ModelAndView modelAndView) throws Exception {
 	}
@@ -144,6 +146,7 @@ public interface HandlerInterceptor {
 	 * @param ex exception thrown on handler execution, if any
 	 * @throws Exception in case of errors
 	 */
+	// 完成请求之后处理(请求已经交付给客户端)
 	default void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
 			@Nullable Exception ex) throws Exception {
 	}
