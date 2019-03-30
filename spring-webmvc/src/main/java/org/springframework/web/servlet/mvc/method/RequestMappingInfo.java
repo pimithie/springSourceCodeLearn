@@ -51,23 +51,32 @@ import org.springframework.web.util.UrlPathHelper;
  * @author Rossen Stoyanchev
  * @since 3.1
  */
+// 与@RequestMapping注解的属性一一对应
 public final class RequestMappingInfo implements RequestCondition<RequestMappingInfo> {
 
 	@Nullable
+	// @RequestMapping 的name
 	private final String name;
 
+	// 请求路径的格式条件
 	private final PatternsRequestCondition patternsCondition;
 
+	// 请求方法条件
 	private final RequestMethodsRequestCondition methodsCondition;
 
+	// 参数条件
 	private final ParamsRequestCondition paramsCondition;
 
+	// 请求头部条件
 	private final HeadersRequestCondition headersCondition;
 
+	// 可消费的Content-Type的条件
 	private final ConsumesRequestCondition consumesCondition;
 
+	// 根据请求头部的Accept字段进行匹配
 	private final ProducesRequestCondition producesCondition;
 
+	// 自定义的条件
 	private final RequestConditionHolder customConditionHolder;
 
 
@@ -214,13 +223,16 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 	 */
 	@Override
 	@Nullable
+	// 返回与当前请求匹配的条件condition信息
 	public RequestMappingInfo getMatchingCondition(HttpServletRequest request) {
+		// 调用所有的条件信息进行匹配
 		RequestMethodsRequestCondition methods = this.methodsCondition.getMatchingCondition(request);
 		ParamsRequestCondition params = this.paramsCondition.getMatchingCondition(request);
 		HeadersRequestCondition headers = this.headersCondition.getMatchingCondition(request);
 		ConsumesRequestCondition consumes = this.consumesCondition.getMatchingCondition(request);
 		ProducesRequestCondition produces = this.producesCondition.getMatchingCondition(request);
 
+		// 若这五个条件有一个不匹配则返回null
 		if (methods == null || params == null || headers == null || consumes == null || produces == null) {
 			return null;
 		}
