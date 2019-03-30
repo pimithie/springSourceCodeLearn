@@ -110,6 +110,8 @@ public final class RequestMethodsRequestCondition extends AbstractRequestConditi
 
 				return null; // No implicit match for OPTIONS (we handle it)
 			}
+			// 若没有配置@RequestMapping的requestMethod属性，则返回自身
+			// 即匹配所有http方法
 			return this;
 		}
 

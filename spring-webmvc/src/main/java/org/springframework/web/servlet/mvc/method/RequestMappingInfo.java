@@ -237,16 +237,22 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 			return null;
 		}
 
+		// 路径匹配
 		PatternsRequestCondition patterns = this.patternsCondition.getMatchingCondition(request);
 		if (patterns == null) {
 			return null;
 		}
 
+		// 自定义条件匹配
 		RequestConditionHolder custom = this.customConditionHolder.getMatchingCondition(request);
 		if (custom == null) {
 			return null;
 		}
 
+		// 创建匹配的 RequestMappingInfo 对象。
+		// 创建 RequestMappingInfo 对象因为当前 RequestMappingInfo 对象，
+		// 一个 methodsCondition 可以配置 GET、POST、DELETE 等等条件，但
+		// 是实际就匹配一个请求类型，此时 methods 只代表其匹配的那个。
 		return new RequestMappingInfo(this.name, patterns,
 				methods, params, headers, consumes, produces, custom.getCondition());
 	}

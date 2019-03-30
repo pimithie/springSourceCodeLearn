@@ -78,7 +78,6 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 	 * Get the URL path patterns associated with this {@link RequestMappingInfo}.
 	 */
 	@Override
-	// @RequestMapping 的路径信息
 	protected Set<String> getMappingPathPatterns(RequestMappingInfo info) {
 		return info.getPatternsCondition().getPatterns();
 	}
@@ -90,6 +89,7 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 	 * @return an info in case of a match; or {@code null} otherwise.
 	 */
 	@Override
+	//获取当前请求所匹配的所有RequestMappingInfo信息
 	protected RequestMappingInfo getMatchingMapping(RequestMappingInfo info, HttpServletRequest request) {
 		return info.getMatchingCondition(request);
 	}

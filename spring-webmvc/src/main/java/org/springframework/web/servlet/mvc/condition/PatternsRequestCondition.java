@@ -201,7 +201,9 @@ public final class PatternsRequestCondition extends AbstractRequestCondition<Pat
 		if (this.patterns.isEmpty()) {
 			return this;
 		}
+		// 获取请求路径
 		String lookupPath = this.pathHelper.getLookupPathForRequest(request);
+		// 获取所有匹配当前请求的路径
 		List<String> matches = getMatchingPatterns(lookupPath);
 		return (!matches.isEmpty() ?
 				new PatternsRequestCondition(matches, this.pathHelper, this.pathMatcher,
