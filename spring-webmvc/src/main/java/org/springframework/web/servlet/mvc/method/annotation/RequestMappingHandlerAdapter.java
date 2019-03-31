@@ -129,18 +129,22 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 
 	@Nullable
+	// 自定义的参数解析器
 	private List<HandlerMethodArgumentResolver> customArgumentResolvers;
 
 	@Nullable
+	// 参数解析器
 	private HandlerMethodArgumentResolverComposite argumentResolvers;
 
 	@Nullable
 	private HandlerMethodArgumentResolverComposite initBinderArgumentResolvers;
 
 	@Nullable
+	// 自定义的返回值解析器
 	private List<HandlerMethodReturnValueHandler> customReturnValueHandlers;
 
 	@Nullable
+	// 返回值解析器
 	private HandlerMethodReturnValueHandlerComposite returnValueHandlers;
 
 	@Nullable
@@ -148,6 +152,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	private ContentNegotiationManager contentNegotiationManager = new ContentNegotiationManager();
 
+	// 消息转化器
 	private List<HttpMessageConverter<?>> messageConverters;
 
 	private List<Object> requestResponseBodyAdvice = new ArrayList<>();
@@ -160,8 +165,10 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	@Nullable
 	private Long asyncRequestTimeout;
 
+	// 返回值为Callable的拦截器
 	private CallableProcessingInterceptor[] callableInterceptors = new CallableProcessingInterceptor[0];
 
+	// 返回值为DeferredResult的拦截器
 	private DeferredResultProcessingInterceptor[] deferredResultInterceptors = new DeferredResultProcessingInterceptor[0];
 
 	private ReactiveAdapterRegistry reactiveAdapterRegistry = ReactiveAdapterRegistry.getSharedInstance();
