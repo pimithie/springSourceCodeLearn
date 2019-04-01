@@ -41,6 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class HttpRequestHandlerAdapter implements HandlerAdapter {
 
 	@Override
+	// 判断handler是否为HttpRequestHandler类型
 	public boolean supports(Object handler) {
 		return (handler instanceof HttpRequestHandler);
 	}
@@ -49,7 +50,7 @@ public class HttpRequestHandlerAdapter implements HandlerAdapter {
 	@Nullable
 	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-
+		// 调用HttpRequestHandler的handleRequest方法
 		((HttpRequestHandler) handler).handleRequest(request, response);
 		return null;
 	}

@@ -40,12 +40,14 @@ import org.springframework.web.servlet.ModelAndView;
 public class SimpleControllerHandlerAdapter implements HandlerAdapter {
 
 	@Override
+	// 判断是否为Controller类型（注意不是@Controller）
 	public boolean supports(Object handler) {
 		return (handler instanceof Controller);
 	}
 
 	@Override
 	@Nullable
+	// 调用handler处理请求，返回ModelAndView
 	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 

@@ -55,6 +55,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class SimpleServletHandlerAdapter implements HandlerAdapter {
 
 	@Override
+	// 判断handler是否为原生Servlet
 	public boolean supports(Object handler) {
 		return (handler instanceof Servlet);
 	}
@@ -64,6 +65,7 @@ public class SimpleServletHandlerAdapter implements HandlerAdapter {
 	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 
+		// 调用servlet的service方法
 		((Servlet) handler).service(request, response);
 		return null;
 	}
