@@ -49,10 +49,13 @@ import org.springframework.web.method.HandlerMethod;
 public class InvocableHandlerMethod extends HandlerMethod {
 
 	@Nullable
+	// 数据绑定器工厂
 	private WebDataBinderFactory dataBinderFactory;
 
+	// 参数解析器
 	private HandlerMethodArgumentResolverComposite argumentResolvers = new HandlerMethodArgumentResolverComposite();
 
+	// 参数名称发现器
 	private ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
 
 
@@ -149,15 +152,19 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	private Object[] getMethodArgumentValues(NativeWebRequest request, @Nullable ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
 
+		// 获取方法参数
 		MethodParameter[] parameters = getMethodParameters();
 		Object[] args = new Object[parameters.length];
+		// 遍历方法参数
 		for (int i = 0; i < parameters.length; i++) {
 			MethodParameter parameter = parameters[i];
 			parameter.initParameterNameDiscovery(this.parameterNameDiscoverer);
+			// 从被提供的参数解析
 			args[i] = resolveProvidedArgument(parameter, providedArgs);
 			if (args[i] != null) {
 				continue;
 			}
+			// 若未获取到参数，调用argumentResolvers进行解析
 			if (this.argumentResolvers.supportsParameter(parameter)) {
 				try {
 					args[i] = this.argumentResolvers.resolveArgument(
@@ -171,6 +178,7 @@ public class InvocableHandlerMethod extends HandlerMethod {
 					throw ex;
 				}
 			}
+			// 如果仍未获取到，则抛异常
 			if (args[i] == null) {
 				throw new IllegalStateException("Could not resolve method parameter at index " +
 						parameter.getParameterIndex() + " in " + parameter.getExecutable().toGenericString() +
