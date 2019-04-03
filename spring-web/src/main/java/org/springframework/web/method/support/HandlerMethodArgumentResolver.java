@@ -39,6 +39,7 @@ public interface HandlerMethodArgumentResolver {
 	 * @return {@code true} if this resolver supports the supplied parameter;
 	 * {@code false} otherwise
 	 */
+	// 判断当前参数解析器是否支持解析parameter
 	boolean supportsParameter(MethodParameter parameter);
 
 	/**
@@ -57,6 +58,7 @@ public interface HandlerMethodArgumentResolver {
 	 * @throws Exception in case of errors with the preparation of argument values
 	 */
 	@Nullable
+	// 具体解析参数
 	Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception;
 

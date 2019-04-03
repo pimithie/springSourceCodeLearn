@@ -42,8 +42,10 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	// HandlerMethodArgumentResolvers
 	private final List<HandlerMethodArgumentResolver> argumentResolvers = new LinkedList<>();
 
+	// MethodParameter-->HandlerMethodArgumentResolver的缓存
 	private final Map<MethodParameter, HandlerMethodArgumentResolver> argumentResolverCache =
 			new ConcurrentHashMap<>(256);
 
@@ -51,6 +53,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	/**
 	 * Add the given {@link HandlerMethodArgumentResolver}.
 	 */
+	// 添加HandlerMethodArgumentResolver
 	public HandlerMethodArgumentResolverComposite addResolver(HandlerMethodArgumentResolver resolver) {
 		this.argumentResolvers.add(resolver);
 		return this;
@@ -60,6 +63,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	 * Add the given {@link HandlerMethodArgumentResolver}s.
 	 * @since 4.3
 	 */
+	// 批量添加HandlerMethodArgumentResolver
 	public HandlerMethodArgumentResolverComposite addResolvers(@Nullable HandlerMethodArgumentResolver... resolvers) {
 		if (resolvers != null) {
 			for (HandlerMethodArgumentResolver resolver : resolvers) {
@@ -72,6 +76,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	/**
 	 * Add the given {@link HandlerMethodArgumentResolver}s.
 	 */
+	// 批量添加HandlerMethodArgumentResolver
 	public HandlerMethodArgumentResolverComposite addResolvers(
 			@Nullable List<? extends HandlerMethodArgumentResolver> resolvers) {
 
@@ -86,6 +91,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	/**
 	 * Return a read-only list with the contained resolvers, or an empty list.
 	 */
+	// 获取参数解析器(只读)
 	public List<HandlerMethodArgumentResolver> getResolvers() {
 		return Collections.unmodifiableList(this.argumentResolvers);
 	}
@@ -104,6 +110,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	 * {@link HandlerMethodArgumentResolver}.
 	 */
 	@Override
+	// 当前composite中包含的参数解析器是否支持解析parameter
 	public boolean supportsParameter(MethodParameter parameter) {
 		return (getArgumentResolver(parameter) != null);
 	}
@@ -114,6 +121,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	 */
 	@Override
 	@Nullable
+	// 解析参数
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
@@ -128,14 +136,18 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	 * Find a registered {@link HandlerMethodArgumentResolver} that supports the given method parameter.
 	 */
 	@Nullable
+	// 获取一个可以解析参数的解析器
 	private HandlerMethodArgumentResolver getArgumentResolver(MethodParameter parameter) {
+		// 先从缓存去查找是否存在对应的解析器
 		HandlerMethodArgumentResolver result = this.argumentResolverCache.get(parameter);
 		if (result == null) {
+			// 遍历所有的参数解析器
 			for (HandlerMethodArgumentResolver methodArgumentResolver : this.argumentResolvers) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Testing if argument resolver [" + methodArgumentResolver + "] supports [" +
 							parameter.getGenericParameterType() + "]");
 				}
+				// 找到对应的解析器，并添加到缓存中
 				if (methodArgumentResolver.supportsParameter(parameter)) {
 					result = methodArgumentResolver;
 					this.argumentResolverCache.put(parameter, result);
