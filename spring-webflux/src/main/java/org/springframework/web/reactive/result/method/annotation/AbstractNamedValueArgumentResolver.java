@@ -61,11 +61,13 @@ import org.springframework.web.server.ServerWebInputException;
 public abstract class AbstractNamedValueArgumentResolver extends HandlerMethodArgumentResolverSupport {
 
 	@Nullable
+	// 容器
 	private final ConfigurableBeanFactory configurableBeanFactory;
 
 	@Nullable
 	private final BeanExpressionContext expressionContext;
 
+	// MethodParameter与NamedValueInfo的缓存映射
 	private final Map<MethodParameter, NamedValueInfo> namedValueInfoCache = new ConcurrentHashMap<>(256);
 
 
@@ -88,9 +90,12 @@ public abstract class AbstractNamedValueArgumentResolver extends HandlerMethodAr
 	public Mono<Object> resolveArgument(
 			MethodParameter parameter, BindingContext bindingContext, ServerWebExchange exchange) {
 
+		// 获取NamedValueInfo
 		NamedValueInfo namedValueInfo = getNamedValueInfo(parameter);
+		// 获取内嵌参数，若无内嵌，则仍然使用本身
 		MethodParameter nestedParameter = parameter.nestedIfOptional();
 
+		// 解析注解申明的value，占位符和表达式
 		Object resolvedName = resolveStringValue(namedValueInfo.name);
 		if (resolvedName == null) {
 			return Mono.error(new IllegalArgumentException(
@@ -116,10 +121,14 @@ public abstract class AbstractNamedValueArgumentResolver extends HandlerMethodAr
 	 * Obtain the named value for the given method parameter.
 	 */
 	private NamedValueInfo getNamedValueInfo(MethodParameter parameter) {
+		// 先从缓存获取
 		NamedValueInfo namedValueInfo = this.namedValueInfoCache.get(parameter);
+		// 若未从缓存中获取到，则进行创建
 		if (namedValueInfo == null) {
+			// createNamedValueInfo抽象方法，由子类实现
 			namedValueInfo = createNamedValueInfo(parameter);
 			namedValueInfo = updateNamedValueInfo(parameter, namedValueInfo);
+			// 放入缓存
 			this.namedValueInfoCache.put(parameter, namedValueInfo);
 		}
 		return namedValueInfo;
@@ -140,7 +149,9 @@ public abstract class AbstractNamedValueArgumentResolver extends HandlerMethodAr
 	 */
 	private NamedValueInfo updateNamedValueInfo(MethodParameter parameter, NamedValueInfo info) {
 		String name = info.name;
+		// 若NamedValueInfo中name属性为空
 		if (info.name.isEmpty()) {
+			// 则取参数名(parameter name)为其name属性
 			name = parameter.getParameterName();
 			if (name == null) {
 				String type = parameter.getNestedParameterType().getName();
@@ -148,7 +159,9 @@ public abstract class AbstractNamedValueArgumentResolver extends HandlerMethodAr
 						"available, and parameter name information not found in class file either.");
 			}
 		}
+		// 获取默认值
 		String defaultValue = (ValueConstants.DEFAULT_NONE.equals(info.defaultValue) ? null : info.defaultValue);
+		// 创建NamedValueInfo对象
 		return new NamedValueInfo(name, info.required, defaultValue);
 	}
 

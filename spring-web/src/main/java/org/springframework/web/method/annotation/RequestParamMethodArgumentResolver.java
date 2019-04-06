@@ -123,6 +123,7 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
+		// parameter是否带有@RequestParam注解
 		if (parameter.hasParameterAnnotation(RequestParam.class)) {
 			if (Map.class.isAssignableFrom(parameter.nestedIfOptional().getNestedParameterType())) {
 				RequestParam requestParam = parameter.getParameterAnnotation(RequestParam.class);
@@ -133,13 +134,17 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 			}
 		}
 		else {
+			// 若parameter带有@RequestPart注解，返回false
 			if (parameter.hasParameterAnnotation(RequestPart.class)) {
 				return false;
 			}
+			// 获取内嵌的参数，如果存在的话
 			parameter = parameter.nestedIfOptional();
+			// 解析Multipart类型的参数
 			if (MultipartResolutionDelegate.isMultipartArgument(parameter)) {
 				return true;
 			}
+			// 若开启useDefaultResolution，则判断是否为简单类型，如基本类型，String，Number...
 			else if (this.useDefaultResolution) {
 				return BeanUtils.isSimpleProperty(parameter.getNestedParameterType());
 			}
@@ -158,6 +163,7 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 	@Override
 	@Nullable
 	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request) throws Exception {
+		// 原生HttpServletRequest的MultipartFile和Part情况
 		HttpServletRequest servletRequest = request.getNativeRequest(HttpServletRequest.class);
 
 		if (servletRequest != null) {
@@ -167,6 +173,7 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 			}
 		}
 
+		// MultipartRequest的MultipartFile和Part情况
 		Object arg = null;
 		MultipartRequest multipartRequest = request.getNativeRequest(MultipartRequest.class);
 		if (multipartRequest != null) {
@@ -175,6 +182,7 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 				arg = (files.size() == 1 ? files.get(0) : files);
 			}
 		}
+		// 普通的参数
 		if (arg == null) {
 			String[] paramValues = request.getParameterValues(name);
 			if (paramValues != null) {

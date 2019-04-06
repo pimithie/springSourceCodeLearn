@@ -100,7 +100,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 		// 获取内嵌的参数
 		MethodParameter nestedParameter = parameter.nestedIfOptional();
 
-		// 解析占位符或表达式的参数值
+		// 解析注解申明的value，占位符或表达式的参数值
 		Object resolvedName = resolveStringValue(namedValueInfo.name);
 		if (resolvedName == null) {
 			throw new IllegalArgumentException(
@@ -116,6 +116,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 			}
 			// 如果为required，则处理缺失的情况
 			else if (namedValueInfo.required && !nestedParameter.isOptional()) {
+				// 默认直接抛出异常，可由子类重写
 				handleMissingValue(namedValueInfo.name, nestedParameter, webRequest);
 			}
 			// 处理null值的情况
@@ -143,7 +144,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 			}
 		}
 
-		// 处理解析值
+		// 对解析值的value进行后置处理，由子类重写实现
 		handleResolvedValue(arg, namedValueInfo.name, parameter, mavContainer, webRequest);
 
 		return arg;
@@ -260,9 +261,11 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 	@Nullable
 	private Object handleNullValue(String name, @Nullable Object value, Class<?> paramType) {
 		if (value == null) {
+			// 若为Boolean类型，则返回false
 			if (Boolean.TYPE.equals(paramType)) {
 				return Boolean.FALSE;
 			}
+			// 否则为基本类型，无法将null值赋给基本类型
 			else if (paramType.isPrimitive()) {
 				throw new IllegalStateException("Optional " + paramType.getSimpleName() + " parameter '" + name +
 						"' is present but cannot be translated into a null value due to being declared as a " +
