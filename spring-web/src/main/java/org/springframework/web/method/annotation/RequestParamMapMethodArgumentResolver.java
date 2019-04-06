@@ -59,7 +59,9 @@ public class RequestParamMapMethodArgumentResolver implements HandlerMethodArgum
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
+		// 获取所有的请求参数的键值对
 		Map<String, String[]> parameterMap = webRequest.getParameterMap();
+		// 为MultiValueMap情况
 		if (MultiValueMap.class.isAssignableFrom(parameter.getParameterType())) {
 			MultiValueMap<String, String> result = new LinkedMultiValueMap<>(parameterMap.size());
 			parameterMap.forEach((key, values) -> {
@@ -69,6 +71,7 @@ public class RequestParamMapMethodArgumentResolver implements HandlerMethodArgum
 			});
 			return result;
 		}
+		// 普通的Map类型
 		else {
 			Map<String, String> result = new LinkedHashMap<>(parameterMap.size());
 			parameterMap.forEach((key, values) -> {
