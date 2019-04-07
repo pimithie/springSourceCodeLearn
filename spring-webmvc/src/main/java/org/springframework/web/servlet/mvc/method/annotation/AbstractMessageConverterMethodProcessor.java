@@ -181,6 +181,7 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 		Class<?> valueType;
 		Type declaredType;
 
+		// 判断返回值是否CharSequence类型(如String)
 		if (value instanceof CharSequence) {
 			outputValue = value.toString();
 			valueType = String.class;
@@ -192,6 +193,7 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 			declaredType = getGenericType(returnType);
 		}
 
+		// 判断返回值的类型是否为Resource的子类
 		if (isResourceType(value, returnType)) {
 			outputMessage.getHeaders().set(HttpHeaders.ACCEPT_RANGES, "bytes");
 			if (value != null && inputMessage.getHeaders().getFirst(HttpHeaders.RANGE) != null) {
@@ -211,6 +213,7 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 		}
 
 
+		// 被选择去使用的MediaType
 		List<MediaType> mediaTypesToUse;
 
 		MediaType contentType = outputMessage.getHeaders().getContentType();
@@ -218,8 +221,11 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 			mediaTypesToUse = Collections.singletonList(contentType);
 		}
 		else {
+			// 获取HttpServletRequest
 			HttpServletRequest request = inputMessage.getServletRequest();
+			// 获取Http请求头部行中Accept中接收类型
 			List<MediaType> requestedMediaTypes = getAcceptableMediaTypes(request);
+			// 获取可以生产的MediaTypes
 			List<MediaType> producibleMediaTypes = getProducibleMediaTypes(request, valueType, declaredType);
 
 			if (outputValue != null && producibleMediaTypes.isEmpty()) {
@@ -227,6 +233,7 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 						"No converter found for return value of type: " + valueType);
 			}
 			mediaTypesToUse = new ArrayList<>();
+			// 通过requestedType获取匹配的可被生产的类型
 			for (MediaType requestedType : requestedMediaTypes) {
 				for (MediaType producibleType : producibleMediaTypes) {
 					if (requestedType.isCompatibleWith(producibleType)) {
@@ -243,6 +250,7 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 			MediaType.sortBySpecificityAndQuality(mediaTypesToUse);
 		}
 
+		// 被选中的MediaType
 		MediaType selectedMediaType = null;
 		for (MediaType mediaType : mediaTypesToUse) {
 			if (mediaType.isConcrete()) {

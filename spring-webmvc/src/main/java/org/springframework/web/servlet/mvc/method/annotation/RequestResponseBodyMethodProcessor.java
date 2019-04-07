@@ -107,11 +107,13 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
+		// 判断参数是否带有@RequestBody注解
 		return parameter.hasParameterAnnotation(RequestBody.class);
 	}
 
 	@Override
 	public boolean supportsReturnType(MethodParameter returnType) {
+		// 判断处理器方法或其所在的类是否带有@ResponseBody注解
 		return (AnnotatedElementUtils.hasAnnotation(returnType.getContainingClass(), ResponseBody.class) ||
 				returnType.hasMethodAnnotation(ResponseBody.class));
 	}
@@ -172,11 +174,14 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest)
 			throws IOException, HttpMediaTypeNotAcceptableException, HttpMessageNotWritableException {
 
+		// 设置请求已经被处理
 		mavContainer.setRequestHandled(true);
+		// 创建请求和响应消息
 		ServletServerHttpRequest inputMessage = createInputMessage(webRequest);
 		ServletServerHttpResponse outputMessage = createOutputMessage(webRequest);
 
 		// Try even with null return value. ResponseBodyAdvice could get involved.
+		// 调用HttpMessageConverter将消息进行转换，被输出到响应中
 		writeWithMessageConverters(returnValue, returnType, inputMessage, outputMessage);
 	}
 
