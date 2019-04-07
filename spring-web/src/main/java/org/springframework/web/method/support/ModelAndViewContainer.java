@@ -52,16 +52,21 @@ public class ModelAndViewContainer {
 	private boolean ignoreDefaultModelOnRedirect = false;
 
 	@Nullable
+	//  视图
 	private Object view;
 
+	// 实际使用的model
 	private final ModelMap defaultModel = new BindingAwareModelMap();
 
 	@Nullable
+	// 重定向时使用的model
 	private ModelMap redirectModel;
 
+	// 是否为重定向情况
 	private boolean redirectModelScenario = false;
 
 	@Nullable
+	// http响应状态
 	private HttpStatus status;
 
 	private final Set<String> noBinding = new HashSet<>(4);
@@ -70,6 +75,7 @@ public class ModelAndViewContainer {
 
 	private final SessionStatus sessionStatus = new SimpleSessionStatus();
 
+	// request是否处理完成
 	private boolean requestHandled = false;
 
 
@@ -138,6 +144,7 @@ public class ModelAndViewContainer {
 	 * a method argument) and {@code ignoreDefaultModelOnRedirect=false}.
 	 */
 	public ModelMap getModel() {
+		// 使用默认的model
 		if (useDefaultModel()) {
 			return this.defaultModel;
 		}

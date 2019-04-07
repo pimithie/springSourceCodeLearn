@@ -38,12 +38,14 @@ public class HandlerMethodReturnValueHandlerComposite implements HandlerMethodRe
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	// 所有被注册的HandlerMethodReturnValueHandler
 	private final List<HandlerMethodReturnValueHandler> returnValueHandlers = new ArrayList<>();
 
 
 	/**
 	 * Return a read-only list with the registered handlers, or an empty list.
 	 */
+	// 获取一个只读的集合，包含所有的HandlerMethodReturnValueHandler
 	public List<HandlerMethodReturnValueHandler> getHandlers() {
 		return Collections.unmodifiableList(this.returnValueHandlers);
 	}
@@ -53,17 +55,20 @@ public class HandlerMethodReturnValueHandlerComposite implements HandlerMethodRe
 	 * {@link HandlerMethodReturnValueHandler}.
 	 */
 	@Override
+	// 是否支持处理当前返回值类型
 	public boolean supportsReturnType(MethodParameter returnType) {
 		return getReturnValueHandler(returnType) != null;
 	}
 
 	@Nullable
 	private HandlerMethodReturnValueHandler getReturnValueHandler(MethodParameter returnType) {
+		// 遍历所有的HandlerMethodReturnValueHandler，寻找可以处理当前返回值类型的处理器
 		for (HandlerMethodReturnValueHandler handler : this.returnValueHandlers) {
 			if (handler.supportsReturnType(returnType)) {
 				return handler;
 			}
 		}
+		// 没有匹配的处理器，则返回null
 		return null;
 	}
 
@@ -75,17 +80,22 @@ public class HandlerMethodReturnValueHandlerComposite implements HandlerMethodRe
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 
+		// 获取对应的返回值的处理器
 		HandlerMethodReturnValueHandler handler = selectHandler(returnValue, returnType);
 		if (handler == null) {
 			throw new IllegalArgumentException("Unknown return value type: " + returnType.getParameterType().getName());
 		}
+		// 处理返回值
 		handler.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
 	}
 
 	@Nullable
 	private HandlerMethodReturnValueHandler selectHandler(@Nullable Object value, MethodParameter returnType) {
+		// 是否为异步的返回值
 		boolean isAsyncValue = isAsyncReturnValue(value, returnType);
+		// 遍历所有的返回值处理器
 		for (HandlerMethodReturnValueHandler handler : this.returnValueHandlers) {
+			// 为异步返回值，并且返回值处理器不是AsyncHandlerMethodReturnValueHandler类型，则跳过
 			if (isAsyncValue && !(handler instanceof AsyncHandlerMethodReturnValueHandler)) {
 				continue;
 			}
