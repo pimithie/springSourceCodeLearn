@@ -31,6 +31,7 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 3.0
  */
+// http消息转换器
 public interface HttpMessageConverter<T> {
 
 	/**
@@ -40,6 +41,7 @@ public interface HttpMessageConverter<T> {
 	 * typically the value of a {@code Content-Type} header.
 	 * @return {@code true} if readable; {@code false} otherwise
 	 */
+	// 判断clazz是否可以被当前converter读取
 	boolean canRead(Class<?> clazz, @Nullable MediaType mediaType);
 
 	/**
@@ -49,12 +51,14 @@ public interface HttpMessageConverter<T> {
 	 * typically the value of an {@code Accept} header.
 	 * @return {@code true} if writable; {@code false} otherwise
 	 */
+	// 判断clazz是否可以被当前converter写出
 	boolean canWrite(Class<?> clazz, @Nullable MediaType mediaType);
 
 	/**
 	 * Return the list of {@link MediaType} objects supported by this converter.
 	 * @return the list of supported media types
 	 */
+	// 获取当前转换器支持的media type
 	List<MediaType> getSupportedMediaTypes();
 
 	/**
@@ -66,6 +70,7 @@ public interface HttpMessageConverter<T> {
 	 * @throws IOException in case of I/O errors
 	 * @throws HttpMessageNotReadableException in case of conversion errors
 	 */
+	// 从HttpInputMessage读取信息并封装到clazz对应的对象中
 	T read(Class<? extends T> clazz, HttpInputMessage inputMessage)
 			throws IOException, HttpMessageNotReadableException;
 
@@ -81,6 +86,7 @@ public interface HttpMessageConverter<T> {
 	 * @throws IOException in case of I/O errors
 	 * @throws HttpMessageNotWritableException in case of conversion errors
 	 */
+	// 将对象t写出到响应报文中
 	void write(T t, @Nullable MediaType contentType, HttpOutputMessage outputMessage)
 			throws IOException, HttpMessageNotWritableException;
 
