@@ -45,6 +45,7 @@ import org.springframework.lang.Nullable;
  * @author Sebastien Deleuze
  * @since 3.1.2
  */
+// spring 默认提供的json转化器
 public class MappingJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
 
 	@Nullable
