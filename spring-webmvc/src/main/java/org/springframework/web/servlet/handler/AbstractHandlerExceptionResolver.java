@@ -48,17 +48,21 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	/** Logger available to subclasses */
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	// 最低的优先级
 	private int order = Ordered.LOWEST_PRECEDENCE;
 
 	@Nullable
+	// 匹配的handler集合
 	private Set<?> mappedHandlers;
 
 	@Nullable
+	// 匹配的handler对应的字节码对象Class
 	private Class<?>[] mappedHandlerClasses;
 
 	@Nullable
 	private Log warnLogger;
 
+	//  阻止响应缓存
 	private boolean preventResponseCaching = false;
 
 

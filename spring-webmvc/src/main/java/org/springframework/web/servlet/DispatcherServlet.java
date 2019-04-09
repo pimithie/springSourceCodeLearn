@@ -650,9 +650,11 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		if (this.detectAllHandlerExceptionResolvers) {
 			// Find all HandlerExceptionResolvers in the ApplicationContext, including ancestor contexts.
+			// 搜寻子容器与根容器中所有的HandlerExceptionResolver实现类
 			Map<String, HandlerExceptionResolver> matchingBeans = BeanFactoryUtils
 					.beansOfTypeIncludingAncestors(context, HandlerExceptionResolver.class, true, false);
 			if (!matchingBeans.isEmpty()) {
+				// 添加到handlerExceptionResolvers中
 				this.handlerExceptionResolvers = new ArrayList<>(matchingBeans.values());
 				// We keep HandlerExceptionResolvers in sorted order.
 				AnnotationAwareOrderComparator.sort(this.handlerExceptionResolvers);
@@ -671,6 +673,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Ensure we have at least some HandlerExceptionResolvers, by registering
 		// default HandlerExceptionResolvers if no other resolvers are found.
+		// 如果handlerExceptionResolvers仍未null，则注册默认的HandlerExceptionResolver
 		if (this.handlerExceptionResolvers == null) {
 			this.handlerExceptionResolvers = getDefaultStrategies(context, HandlerExceptionResolver.class);
 			if (logger.isDebugEnabled()) {
