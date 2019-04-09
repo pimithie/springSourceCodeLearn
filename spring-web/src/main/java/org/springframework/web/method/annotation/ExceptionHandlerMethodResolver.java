@@ -47,12 +47,15 @@ public class ExceptionHandlerMethodResolver {
 	/**
 	 * A filter for selecting {@code @ExceptionHandler} methods.
 	 */
+	// 搜寻带有@ExceptionHandler的方法的过滤器
 	public static final MethodFilter EXCEPTION_HANDLER_METHODS = method ->
 			(AnnotationUtils.findAnnotation(method, ExceptionHandler.class) != null);
 
 
+	// 已经存在的被映射的方法
 	private final Map<Class<? extends Throwable>, Method> mappedMethods = new HashMap<>(16);
 
+	// 已经存在异常查询缓存
 	private final Map<Class<? extends Throwable>, Method> exceptionLookupCache = new ConcurrentReferenceHashMap<>(16);
 
 
@@ -61,7 +64,9 @@ public class ExceptionHandlerMethodResolver {
 	 * @param handlerType the type to introspect
 	 */
 	public ExceptionHandlerMethodResolver(Class<?> handlerType) {
+		// 遍历所有的@ExceptionHandler方法
 		for (Method method : MethodIntrospector.selectMethods(handlerType, EXCEPTION_HANDLER_METHODS)) {
+			// 遍历当前@ExceptionHandler可以处理的所有异常集合
 			for (Class<? extends Throwable> exceptionType : detectExceptionMappings(method)) {
 				addExceptionMapping(exceptionType, method);
 			}
@@ -76,14 +81,19 @@ public class ExceptionHandlerMethodResolver {
 	@SuppressWarnings("unchecked")
 	private List<Class<? extends Throwable>> detectExceptionMappings(Method method) {
 		List<Class<? extends Throwable>> result = new ArrayList<>();
+		// 获取@ExceptionHandler注解属性中申明的异常类型
 		detectAnnotationExceptionMappings(method, result);
+		// 若未申明异常类型
 		if (result.isEmpty()) {
+			// 则遍历此方法所有的参数类型
 			for (Class<?> paramType : method.getParameterTypes()) {
+				// 若存在Throwable的子类，则添加到可以被此@ExceptionHandler方法可以处理的异常类型中
 				if (Throwable.class.isAssignableFrom(paramType)) {
 					result.add((Class<? extends Throwable>) paramType);
 				}
 			}
 		}
+		// 仍然为空，抛异常
 		if (result.isEmpty()) {
 			throw new IllegalStateException("No exception types mapped to " + method);
 		}
@@ -131,6 +141,7 @@ public class ExceptionHandlerMethodResolver {
 	 */
 	@Nullable
 	public Method resolveMethodByThrowable(Throwable exception) {
+		// 通过异常类型获取对应的处理方法
 		Method method = resolveMethodByExceptionType(exception.getClass());
 		if (method == null) {
 			Throwable cause = exception.getCause();
@@ -163,6 +174,7 @@ public class ExceptionHandlerMethodResolver {
 	@Nullable
 	private Method getMappedMethod(Class<? extends Throwable> exceptionType) {
 		List<Class<? extends Throwable>> matches = new ArrayList<>();
+		// 遍历所有被匹配的异常类型
 		for (Class<? extends Throwable> mappedException : this.mappedMethods.keySet()) {
 			if (mappedException.isAssignableFrom(exceptionType)) {
 				matches.add(mappedException);
