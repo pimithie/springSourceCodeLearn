@@ -29,6 +29,7 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 2.0
  */
+// 当没有指定的view name(逻辑视图)申明，通过此策略接口寻找对应的view name(逻辑视图)
 public interface RequestToViewNameTranslator {
 
 	/**
@@ -39,6 +40,7 @@ public interface RequestToViewNameTranslator {
 	 * @throws Exception if view name translation fails
 	 */
 	@Nullable
+	// 获取逻辑视图名
 	String getViewName(HttpServletRequest request) throws Exception;
 
 }
