@@ -91,16 +91,20 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 	@Nullable
 	private ContentNegotiationManager contentNegotiationManager;
 
+	// 获取ContentNegotiationManager的FactoryBean
 	private final ContentNegotiationManagerFactoryBean cnmFactoryBean = new ContentNegotiationManagerFactoryBean();
 
 	private boolean useNotAcceptableStatusCode = false;
 
 	@Nullable
+	// 默认的视图
 	private List<View> defaultViews;
 
 	@Nullable
+	// ViewResolvers
 	private List<ViewResolver> viewResolvers;
 
+	// 拥有最高的优先级
 	private int order = Ordered.HIGHEST_PRECEDENCE;
 
 
@@ -181,8 +185,10 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 
 	@Override
 	protected void initServletContext(ServletContext servletContext) {
+		// 从子容器和根容器中获取所有的ViewResolver的实现类
 		Collection<ViewResolver> matchingBeans =
 				BeanFactoryUtils.beansOfTypeIncludingAncestors(obtainApplicationContext(), ViewResolver.class).values();
+		// 若此时viewResolvers为null，则将刚刚获取到的ViewResolver添加进去
 		if (this.viewResolvers == null) {
 			this.viewResolvers = new ArrayList<>(matchingBeans.size());
 			for (ViewResolver viewResolver : matchingBeans) {
@@ -192,11 +198,14 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 			}
 		}
 		else {
+			// viewResolvers不为null，则进行遍历
 			for (int i = 0; i < this.viewResolvers.size(); i++) {
 				ViewResolver vr = this.viewResolvers.get(i);
+				// 从子容器和根容器中获取的匹配的ViewResolver是否包含vr
 				if (matchingBeans.contains(vr)) {
 					continue;
 				}
+				// 不包含则说明未进行初始化
 				String name = vr.getClass().getName() + i;
 				obtainApplicationContext().getAutowireCapableBeanFactory().initializeBean(vr, name);
 			}
@@ -206,12 +215,15 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 			logger.warn("Did not find any ViewResolvers to delegate to; please configure them using the " +
 					"'viewResolvers' property on the ContentNegotiatingViewResolver");
 		}
+		// 排序
 		AnnotationAwareOrderComparator.sort(this.viewResolvers);
+		// 设置ContentNegotiationManager的ServletContext属性
 		this.cnmFactoryBean.setServletContext(servletContext);
 	}
 
 	@Override
 	public void afterPropertiesSet() {
+		// 若contentNegotiationManager为null，则进行创建
 		if (this.contentNegotiationManager == null) {
 			this.contentNegotiationManager = this.cnmFactoryBean.build();
 		}
@@ -221,16 +233,21 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 	@Override
 	@Nullable
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
+		// 获取请求属性
 		RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
 		Assert.state(attrs instanceof ServletRequestAttributes, "No current ServletRequestAttributes");
+		// 获取被请求MediaType
 		List<MediaType> requestedMediaTypes = getMediaTypes(((ServletRequestAttributes) attrs).getRequest());
 		if (requestedMediaTypes != null) {
+			// 获取该MediaType对应的所有候选的View
 			List<View> candidateViews = getCandidateViews(viewName, locale, requestedMediaTypes);
+			// 从所有候选View中选择最优的View
 			View bestView = getBestView(candidateViews, requestedMediaTypes, attrs);
 			if (bestView != null) {
 				return bestView;
 			}
 		}
+		// 若没有匹配的View对象，则根据 useNotAcceptableStatusCode ，返回 NOT_ACCEPTABLE_VIEW 或 null
 		if (this.useNotAcceptableStatusCode) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("No acceptable view found; returning 406 (Not Acceptable) status code");
@@ -362,11 +379,13 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 
 		@Override
 		@Nullable
+		// ContentType为null
 		public String getContentType() {
 			return null;
 		}
 
 		@Override
+		// 渲染页面只是添加一个SC_NOT_ACCEPTABLE状态码
 		public void render(@Nullable Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) {
 			response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
 		}
