@@ -54,6 +54,7 @@ import org.springframework.web.servlet.ViewResolver;
  */
 public class BeanNameViewResolver extends WebApplicationObjectSupport implements ViewResolver, Ordered {
 
+	// 优先级最低
 	private int order = Ordered.LOWEST_PRECEDENCE;  // default: same as non-Ordered
 
 
@@ -75,14 +76,17 @@ public class BeanNameViewResolver extends WebApplicationObjectSupport implements
 	@Override
 	@Nullable
 	public View resolveViewName(String viewName, Locale locale) throws BeansException {
+		// 判断bean的name为 viewName的bean是否存在
 		ApplicationContext context = obtainApplicationContext();
 		if (!context.containsBean(viewName)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("No matching bean found for view name '" + viewName + "'");
 			}
 			// Allow for ViewResolver chaining...
+			// 不存在，返回null
 			return null;
 		}
+		// 若name为viewName的bean没有实现View接口，返回null
 		if (!context.isTypeMatch(viewName, View.class)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Found matching bean for view name '" + viewName +
@@ -92,6 +96,7 @@ public class BeanNameViewResolver extends WebApplicationObjectSupport implements
 			// let's accept this as a non-match and allow for chaining as well...
 			return null;
 		}
+		// 获取viewName对应的bean
 		return context.getBean(viewName, View.class);
 	}
 

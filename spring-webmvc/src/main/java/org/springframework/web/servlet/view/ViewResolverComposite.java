@@ -43,8 +43,10 @@ import org.springframework.web.servlet.ViewResolver;
 public class ViewResolverComposite implements ViewResolver, Ordered, InitializingBean,
 		ApplicationContextAware, ServletContextAware {
 
+	// 所有的视图解析器
 	private final List<ViewResolver> viewResolvers = new ArrayList<>();
 
+	// 优先级最低
 	private int order = Ordered.LOWEST_PRECEDENCE;
 
 
@@ -94,6 +96,7 @@ public class ViewResolverComposite implements ViewResolver, Ordered, Initializin
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		// 遍历所有的视图解析器，若其实现了initialization callback接口，则继续调用其InitializingBean的afterPropertiesSet进行初始化
 		for (ViewResolver viewResolver : this.viewResolvers) {
 			if (viewResolver instanceof InitializingBean) {
 				((InitializingBean) viewResolver).afterPropertiesSet();
@@ -104,6 +107,7 @@ public class ViewResolverComposite implements ViewResolver, Ordered, Initializin
 	@Override
 	@Nullable
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
+		// 遍历所有的视图解析器，进行视图解析
 		for (ViewResolver viewResolver : this.viewResolvers) {
 			View view = viewResolver.resolveViewName(viewName, locale);
 			if (view != null) {

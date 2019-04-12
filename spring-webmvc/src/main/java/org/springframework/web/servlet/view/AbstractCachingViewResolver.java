@@ -61,6 +61,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 
 
 	/** The maximum number of entries in the cache */
+	// 缓存上限
 	private volatile int cacheLimit = DEFAULT_CACHE_LIMIT;
 
 	/** Whether we should refrain from resolving views again if unresolved once */
@@ -71,6 +72,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 
 	/** Map from view key to View instance, synchronized for View creation */
 	@SuppressWarnings("serial")
+	// LRU缓存机制实现
 	private final Map<Object, View> viewCreationCache =
 			new LinkedHashMap<Object, View>(DEFAULT_CACHE_LIMIT, 0.75f, true) {
 				@Override
@@ -196,6 +198,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	 * @param locale the locale for which the view object should be removed
 	 */
 	public void removeFromCache(String viewName, Locale locale) {
+		// 如果禁用缓存
 		if (!isCache()) {
 			logger.warn("View caching is SWITCHED OFF -- removal not necessary");
 		}
@@ -246,6 +249,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	 */
 	@Nullable
 	protected View createView(String viewName, Locale locale) throws Exception {
+		// 调用子类重写的loadView方法
 		return loadView(viewName, locale);
 	}
 
@@ -263,6 +267,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	 * @see #resolveViewName
 	 */
 	@Nullable
+	// 由子类进行重写
 	protected abstract View loadView(String viewName, Locale locale) throws Exception;
 
 }
