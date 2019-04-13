@@ -91,6 +91,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 * Such view names will not be resolved in the configured default
 	 * way but rather be treated as special shortcut.
 	 */
+	// 重定向前缀
 	public static final String REDIRECT_URL_PREFIX = "redirect:";
 
 	/**
@@ -99,17 +100,22 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 * Such view names will not be resolved in the configured default
 	 * way but rather be treated as special shortcut.
 	 */
+	// 请求转发前缀
 	public static final String FORWARD_URL_PREFIX = "forward:";
 
 
 	@Nullable
+	// view对应的类型
 	private Class<?> viewClass;
 
+	// 前缀
 	private String prefix = "";
 
+	// 后缀
 	private String suffix = "";
 
 	@Nullable
+	// Content-Type类型
 	private String contentType;
 
 	private boolean redirectContextRelative = true;
@@ -137,6 +143,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	@Nullable
 	private String[] viewNames;
 
+	// 最低的优先级
 	private int order = Ordered.LOWEST_PRECEDENCE;
 
 
@@ -439,6 +446,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	@Override
 	protected void initApplicationContext() {
 		super.initApplicationContext();
+		// 若无viewClass，抛异常
 		if (getViewClass() == null) {
 			throw new IllegalArgumentException("Property 'viewClass' is required");
 		}
@@ -466,15 +474,19 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	protected View createView(String viewName, Locale locale) throws Exception {
 		// If this resolver is not supposed to handle the given view,
 		// return null to pass on to the next resolver in the chain.
+		// 不能够处理，返回null
 		if (!canHandle(viewName, locale)) {
 			return null;
 		}
 
 		// Check for special "redirect:" prefix.
+		// 带有重定向前缀
 		if (viewName.startsWith(REDIRECT_URL_PREFIX)) {
 			String redirectUrl = viewName.substring(REDIRECT_URL_PREFIX.length());
+			// 创建重定向view对象
 			RedirectView view = new RedirectView(redirectUrl,
 					isRedirectContextRelative(), isRedirectHttp10Compatible());
+			// 设置重定向view的hosts属性
 			String[] hosts = getRedirectHosts();
 			if (hosts != null) {
 				view.setHosts(hosts);
@@ -483,7 +495,9 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 		}
 
 		// Check for special "forward:" prefix.
+		// 带有请求转发前缀
 		if (viewName.startsWith(FORWARD_URL_PREFIX)) {
+			// 获取请求转发url
 			String forwardUrl = viewName.substring(FORWARD_URL_PREFIX.length());
 			return new InternalResourceView(forwardUrl);
 		}
@@ -502,6 +516,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 * @return whether this resolver applies to the specified view
 	 * @see org.springframework.util.PatternMatchUtils#simpleMatch(String, String)
 	 */
+	// 判断给定的视图，此视图解析器能否处理
 	protected boolean canHandle(String viewName, Locale locale) {
 		String[] viewNames = getViewNames();
 		return (viewNames == null || PatternMatchUtils.simpleMatch(viewNames, viewName));

@@ -52,11 +52,13 @@ public interface MultipartHttpServletRequest extends HttpServletRequest, Multipa
 	 * Return this request's method as a convenient HttpMethod instance.
 	 */
 	@Nullable
+	// 获取http请求的方法
 	HttpMethod getRequestMethod();
 
 	/**
 	 * Return this request's headers as a convenient HttpHeaders instance.
 	 */
+	// 获取http请求的头部行
 	HttpHeaders getRequestHeaders();
 
 	/**
@@ -65,6 +67,7 @@ public interface MultipartHttpServletRequest extends HttpServletRequest, Multipa
 	 * Otherwise, the returned headers will include a 'Content-Type' header at the very least.
 	 */
 	@Nullable
+	// 获取Multipart请求的头部行
 	HttpHeaders getMultipartHeaders(String paramOrFileName);
 
 }

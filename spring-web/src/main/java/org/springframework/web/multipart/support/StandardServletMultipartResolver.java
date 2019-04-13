@@ -60,6 +60,7 @@ import org.springframework.web.multipart.MultipartResolver;
  */
 public class StandardServletMultipartResolver implements MultipartResolver {
 
+	// 是否进行延迟解析
 	private boolean resolveLazily = false;
 
 
@@ -78,6 +79,7 @@ public class StandardServletMultipartResolver implements MultipartResolver {
 
 
 	@Override
+	// 判断是否为Multipart/*的请求
 	public boolean isMultipart(HttpServletRequest request) {
 		// Same check as in Commons FileUpload...
 		if (!"post".equalsIgnoreCase(request.getMethod())) {
@@ -87,6 +89,7 @@ public class StandardServletMultipartResolver implements MultipartResolver {
 	}
 
 	@Override
+	// 将request解析为MultipartHttpServletRequest
 	public MultipartHttpServletRequest resolveMultipart(HttpServletRequest request) throws MultipartException {
 		return new StandardMultipartHttpServletRequest(request, this.resolveLazily);
 	}
@@ -98,6 +101,7 @@ public class StandardServletMultipartResolver implements MultipartResolver {
 			// To be on the safe side: explicitly delete the parts,
 			// but only actual file parts (for Resin compatibility)
 			try {
+				// 清空所有的part
 				for (Part part : request.getParts()) {
 					if (request.getFile(part.getName()) != null) {
 						part.delete();
