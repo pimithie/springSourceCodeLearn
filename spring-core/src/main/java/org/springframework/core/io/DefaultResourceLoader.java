@@ -50,6 +50,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 	@Nullable
 	private ClassLoader classLoader;
 
+	// 解析具体协议的Resolvers
 	private final Set<ProtocolResolver> protocolResolvers = new LinkedHashSet<>(4);
 
 	private final Map<Class<?>, Map<Resource, ?>> resourceCaches = new ConcurrentHashMap<>(4);
@@ -105,6 +106,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 	 * @since 4.3
 	 * @see #getProtocolResolvers()
 	 */
+	// 添加具体协议的Resolver
 	public void addProtocolResolver(ProtocolResolver resolver) {
 		Assert.notNull(resolver, "ProtocolResolver must not be null");
 		this.protocolResolvers.add(resolver);
@@ -144,6 +146,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 	public Resource getResource(String location) {
 		Assert.notNull(location, "Location must not be null");
 
+		// 遍历所有的ProtocolResolver，并尝试对此location进行解析，若有一个解析成功，则直接返回
 		for (ProtocolResolver protocolResolver : this.protocolResolvers) {
 			Resource resource = protocolResolver.resolve(location, this);
 			if (resource != null) {
@@ -151,20 +154,24 @@ public class DefaultResourceLoader implements ResourceLoader {
 			}
 		}
 
+		// 判断路径是否以'/'开始
 		if (location.startsWith("/")) {
 			return getResourceByPath(location);
 		}
+		// 判断是否以"classpath:"开头
 		else if (location.startsWith(CLASSPATH_URL_PREFIX)) {
 			return new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()), getClassLoader());
 		}
 		else {
 			try {
 				// Try to parse the location as a URL...
+				// 尝试进行将其解析成URL
 				URL url = new URL(location);
 				return (ResourceUtils.isFileURL(url) ? new FileUrlResource(url) : new UrlResource(url));
 			}
 			catch (MalformedURLException ex) {
 				// No URL -> resolve as resource path.
+				// 解析URL失败，则通过这个具体路径去获取Resource，默认从classpath路径去获取(通过classloader)
 				return getResourceByPath(location);
 			}
 		}
