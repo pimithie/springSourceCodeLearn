@@ -82,6 +82,7 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 			throws MultipartException {
 
 		super(request);
+		// 若非懒加载，则立即解析请求
 		if (!lazyParsing) {
 			parseRequest(request);
 		}
@@ -90,14 +91,19 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 
 	private void parseRequest(HttpServletRequest request) {
 		try {
+			// 获取Servlet请求的part
 			Collection<Part> parts = request.getParts();
+			// 获取对应multipart的参数名称
 			this.multipartParameterNames = new LinkedHashSet<>(parts.size());
 			MultiValueMap<String, MultipartFile> files = new LinkedMultiValueMap<>(parts.size());
 			for (Part part : parts) {
+				// 获取http请求头部行Content-Disposition的值
 				String headerValue = part.getHeader(HttpHeaders.CONTENT_DISPOSITION);
 				ContentDisposition disposition = ContentDisposition.parse(headerValue);
+				// 获取上传的文件名
 				String filename = disposition.getFilename();
 				if (filename != null) {
+					// 若文件名以=?开始并且以?=结尾，则进行解析
 					if (filename.startsWith("=?") && filename.endsWith("?=")) {
 						filename = MimeDelegate.decode(filename);
 					}
