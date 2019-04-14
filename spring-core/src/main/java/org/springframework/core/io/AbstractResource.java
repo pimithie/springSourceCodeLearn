@@ -49,6 +49,7 @@ public abstract class AbstractResource implements Resource {
 	 * This will cover both directories and content resources.
 	 */
 	@Override
+	// 先检验这个Resource表示是文件系统中的一个文件并且可以读取，若不行，则判断是否可以从InputStream中读取
 	public boolean exists() {
 		// Try file existence: can we find the file in the file system?
 		try {
@@ -95,6 +96,7 @@ public abstract class AbstractResource implements Resource {
 	 * that the resource cannot be resolved to a URL.
 	 */
 	@Override
+	// 直接抛出异常，由子类进行重写
 	public URL getURL() throws IOException {
 		throw new FileNotFoundException(getDescription() + " cannot be resolved to URL");
 	}
@@ -119,6 +121,7 @@ public abstract class AbstractResource implements Resource {
 	 * that the resource cannot be resolved to an absolute file path.
 	 */
 	@Override
+	// 直接抛出异常，由子类进行重写
 	public File getFile() throws IOException {
 		throw new FileNotFoundException(getDescription() + " cannot be resolved to absolute file path");
 	}
@@ -142,14 +145,17 @@ public abstract class AbstractResource implements Resource {
 	 */
 	@Override
 	public long contentLength() throws IOException {
+		// 获取InputStream
 		InputStream is = getInputStream();
 		try {
+			// 统计字节数
 			long size = 0;
 			byte[] buf = new byte[256];
 			int read;
 			while ((read = is.read(buf)) != -1) {
 				size += read;
 			}
+			// 返回统计之后的字节数
 			return size;
 		}
 		finally {

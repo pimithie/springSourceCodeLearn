@@ -57,6 +57,7 @@ public interface Resource extends InputStreamSource {
 	 * existence of a {@code Resource} handle only guarantees a valid
 	 * descriptor handle.
 	 */
+	// 判断当前Resource是否存在
 	boolean exists();
 
 	/**
@@ -68,6 +69,7 @@ public interface Resource extends InputStreamSource {
 	 * that the resource content cannot be read.
 	 * @see #getInputStream()
 	 */
+	// 标明此Resource是否可以getInputStream进行读取
 	default boolean isReadable() {
 		return true;
 	}
@@ -90,6 +92,7 @@ public interface Resource extends InputStreamSource {
 	 * @since 5.0
 	 * @see #getFile()
 	 */
+	// 判断当前Resource是否为文件
 	default boolean isFile() {
 		return false;
 	}
@@ -99,6 +102,7 @@ public interface Resource extends InputStreamSource {
 	 * @throws IOException if the resource cannot be resolved as URL,
 	 * i.e. if the resource is not available as descriptor
 	 */
+	// 获取此Resource对应的URL
 	URL getURL() throws IOException;
 
 	/**
@@ -107,6 +111,7 @@ public interface Resource extends InputStreamSource {
 	 * i.e. if the resource is not available as descriptor
 	 * @since 2.5
 	 */
+	// 获取此Resource对应URI
 	URI getURI() throws IOException;
 
 	/**
@@ -116,6 +121,7 @@ public interface Resource extends InputStreamSource {
 	 * @throws IOException in case of general resolution/reading failures
 	 * @see #getInputStream()
 	 */
+	// 获取此Resource对应的File
 	File getFile() throws IOException;
 
 	/**
@@ -138,6 +144,7 @@ public interface Resource extends InputStreamSource {
 	 * @throws IOException if the resource cannot be resolved
 	 * (in the file system or as some other known physical resource type)
 	 */
+	// 获取Resource的字节数
 	long contentLength() throws IOException;
 
 	/**
@@ -162,6 +169,7 @@ public interface Resource extends InputStreamSource {
 	 * have a filename.
 	 */
 	@Nullable
+	// 获取对应文件名
 	String getFilename();
 
 	/**
