@@ -274,8 +274,10 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	}
 
 	@Override
+	// 从通配符路径或全路径(如:classpath*:)读取对个Resource
 	public Resource[] getResources(String locationPattern) throws IOException {
 		Assert.notNull(locationPattern, "Location pattern must not be null");
+		// 是否以classpath*:开头
 		if (locationPattern.startsWith(CLASSPATH_ALL_URL_PREFIX)) {
 			// a class path resource (multiple resources for same name possible)
 			if (getPathMatcher().isPattern(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()))) {
@@ -284,6 +286,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			}
 			else {
 				// all class path resources with the given name
+				// 寻找所有classpath路径满足条件的资源
 				return findAllClassPathResources(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()));
 			}
 		}
@@ -314,9 +317,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 */
 	protected Resource[] findAllClassPathResources(String location) throws IOException {
 		String path = location;
+		// 去除前导'/'
 		if (path.startsWith("/")) {
 			path = path.substring(1);
 		}
+		// 读取所有的Resouce
 		Set<Resource> result = doFindAllClassPathResources(path);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Resolved classpath location [" + location + "] to resources " + result);
@@ -333,8 +338,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 */
 	protected Set<Resource> doFindAllClassPathResources(String path) throws IOException {
 		Set<Resource> result = new LinkedHashSet<>(16);
+		// 获取类加载器
 		ClassLoader cl = getClassLoader();
+		// 通过classloader加载所有的资源
 		Enumeration<URL> resourceUrls = (cl != null ? cl.getResources(path) : ClassLoader.getSystemResources(path));
+		// 遍历所有URL，并添加result中
 		while (resourceUrls.hasMoreElements()) {
 			URL url = resourceUrls.nextElement();
 			result.add(convertClassLoaderURL(url));
@@ -342,6 +350,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		if ("".equals(path)) {
 			// The above result is likely to be incomplete, i.e. only containing file system references.
 			// We need to have pointers to each of the jar files on the classpath as well...
+			// 添加classpath下的所有jar包
 			addAllClassLoaderJarRoots(cl, result);
 		}
 		return result;
