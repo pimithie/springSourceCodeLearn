@@ -32,6 +32,8 @@ package org.springframework.beans.factory;
  * @author Juergen Hoeller
  * @since 3.1
  */
+// 一个标记性的父接口，指明一个bean可以获取spring的一些基础组件或信息，
+// 如ApplicationContext，BeanFactory，beanName。。
 public interface Aware {
 
 }

@@ -38,6 +38,7 @@ import org.springframework.beans.BeansException;
  * @see InitializingBean
  * @see org.springframework.context.ApplicationContextAware
  */
+// Aware子接口，标名当前bean需要BeanFactory
 public interface BeanFactoryAware extends Aware {
 
 	/**
@@ -50,6 +51,7 @@ public interface BeanFactoryAware extends Aware {
 	 * @throws BeansException in case of initialization errors
 	 * @see BeanInitializationException
 	 */
+	// 通过此方法将BeanFactory注入实现此接口的bean中
 	void setBeanFactory(BeanFactory beanFactory) throws BeansException;
 
 }

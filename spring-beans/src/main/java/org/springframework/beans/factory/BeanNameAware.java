@@ -33,6 +33,7 @@ package org.springframework.beans.factory;
  * @see BeanFactoryAware
  * @see InitializingBean
  */
+// Aware子接口，表明当前bean可以感知到自己在IOC容器中的bean name
 public interface BeanNameAware extends Aware {
 
 	/**
@@ -47,6 +48,7 @@ public interface BeanNameAware extends Aware {
 	 * "#..." suffixes. Use the {@link BeanFactoryUtils#originalBeanName(String)}
 	 * method to extract the original bean name (without suffix), if desired.
 	 */
+	// 通过此方法将bean name注入到bean中
 	void setBeanName(String name);
 
 }

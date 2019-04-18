@@ -56,6 +56,7 @@ import org.springframework.beans.factory.Aware;
  * @see org.springframework.context.support.ApplicationObjectSupport
  * @see org.springframework.beans.factory.BeanFactoryAware
  */
+// Aware子接口，标名当前bean需要ApplicationContext
 public interface ApplicationContextAware extends Aware {
 
 	/**
@@ -71,6 +72,7 @@ public interface ApplicationContextAware extends Aware {
 	 * @throws BeansException if thrown by application context methods
 	 * @see org.springframework.beans.factory.BeanInitializationException
 	 */
+	// 通过此方法将ApplicationContext注入实现此接口的bean中
 	void setApplicationContext(ApplicationContext applicationContext) throws BeansException;
 
 }
