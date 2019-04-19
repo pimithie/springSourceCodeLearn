@@ -40,6 +40,9 @@ import org.springframework.lang.Nullable;
  * @see ConfigurableBeanFactory#addBeanPostProcessor
  * @see BeanFactoryPostProcessor
  */
+// 自定义修改bean实例，如检验标志性接口(如Aware)，进行代理包装
+// ApplicationContext会自动检测BeanPostProcessor的实现类，并应用他们在后续的bean创建
+// BeanFactory需要编程式注册BeanPostProcessor
 public interface BeanPostProcessor {
 
 	/**
@@ -56,6 +59,8 @@ public interface BeanPostProcessor {
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet
 	 */
 	@Nullable
+	// 在初始化回调（如Spring提供的InitializingBean接口的afterPropertiesSet方法调用，自定义的init-method调用）
+	// 之前进行调用
 	default Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		return bean;
 	}
@@ -82,6 +87,8 @@ public interface BeanPostProcessor {
 	 * @see org.springframework.beans.factory.FactoryBean
 	 */
 	@Nullable
+	// 在初始化回调（如Spring提供的InitializingBean接口的afterPropertiesSet方法调用，自定义的init-method调用）
+	// 之后进行调用
 	default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		return bean;
 	}
