@@ -1116,6 +1116,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 		}
 		if (resolved) {
+			// 是否通过构造方法进行自动装配被创建对象
 			if (autowireNecessary) {
 				return autowireConstructor(beanName, mbd, null, null);
 			}
@@ -1132,6 +1133,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// No special handling: simply use no-arg constructor.
+		// 无特殊的处理则使用无参构造进行对象创建
 		return instantiateBean(beanName, mbd);
 	}
 
@@ -1218,6 +1220,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected BeanWrapper instantiateBean(final String beanName, final RootBeanDefinition mbd) {
 		try {
 			Object beanInstance;
+			// 获取父容器
 			final BeanFactory parent = this;
 			if (System.getSecurityManager() != null) {
 				beanInstance = AccessController.doPrivileged((PrivilegedAction<Object>) () ->
@@ -1225,9 +1228,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 						getAccessControlContext());
 			}
 			else {
+				// 根据实例化策略进行对象的创建
 				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, parent);
 			}
+			// 将创建出的对象装入BeanWrapper中
 			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
+			// 向BeanWrapper中注入editor
 			initBeanWrapper(bw);
 			return bw;
 		}

@@ -46,6 +46,10 @@ import java.beans.PropertyDescriptor;
  * @see org.springframework.validation.BeanPropertyBindingResult
  * @see org.springframework.validation.DataBinder#initBeanPropertyAccess()
  */
+// spring low level的JavaBean的基础设施类
+// 一般不直接使用而是通过BeanFactory或DataBinder使用
+// 提供给bean的属性赋值，判断bean属性的可读可写性
+// 是BeanDefinition到bean实例的一个中间产物
 public interface BeanWrapper extends ConfigurablePropertyAccessor {
 
 	/**
@@ -64,11 +68,13 @@ public interface BeanWrapper extends ConfigurablePropertyAccessor {
 	/**
 	 * Return the bean instance wrapped by this object.
 	 */
+	// 获取被当前BeanWrapper包装的实例
 	Object getWrappedInstance();
 
 	/**
 	 * Return the type of the wrapped bean instance.
 	 */
+	// 获取被当前BeanWrapper包装的实例的Class对象
 	Class<?> getWrappedClass();
 
 	/**
@@ -76,6 +82,7 @@ public interface BeanWrapper extends ConfigurablePropertyAccessor {
 	 * (as determined by standard JavaBeans introspection).
 	 * @return the PropertyDescriptors for the wrapped object
 	 */
+	// 获取被当前BeanWrapper包装的实例的PropertyDescriptor
 	PropertyDescriptor[] getPropertyDescriptors();
 
 	/**
@@ -86,6 +93,7 @@ public interface BeanWrapper extends ConfigurablePropertyAccessor {
 	 * @return the property descriptor for the specified property
 	 * @throws InvalidPropertyException if there is no such property
 	 */
+	// 获取被当前BeanWrapper包装的实例的特定属性的PropertyDescriptor
 	PropertyDescriptor getPropertyDescriptor(String propertyName) throws InvalidPropertyException;
 
 }
