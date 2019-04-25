@@ -1289,6 +1289,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	protected void populateBean(String beanName, RootBeanDefinition mbd, @Nullable BeanWrapper bw) {
 		if (bw == null) {
+			// BeanWrapper为null，并且BeanDefinition中有属性值，抛出异常
 			if (mbd.hasPropertyValues()) {
 				throw new BeanCreationException(
 						mbd.getResourceDescription(), beanName, "Cannot apply property values to null instance");
@@ -1302,6 +1303,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Give any InstantiationAwareBeanPostProcessors the opportunity to modify the
 		// state of the bean before properties are set. This can be used, for example,
 		// to support styles of field injection.
+		// 调用InstantiationAwareBeanPostProcessor的postProcessAfterInstantiation方法
+		// 决定是否需要属性赋值
 		boolean continueWithPropertyPopulation = true;
 
 		//调用InstantiationAwareBeanPostProcessor的处理方法
@@ -1309,6 +1312,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			for (BeanPostProcessor bp : getBeanPostProcessors()) {
 				if (bp instanceof InstantiationAwareBeanPostProcessor) {
 					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+					// 若不需要进行属性赋值，则将continueWithPropertyPopulation置为false并break
 					if (!ibp.postProcessAfterInstantiation(bw.getWrappedInstance(), beanName)) {
 						continueWithPropertyPopulation = false;
 						break;
@@ -1317,10 +1321,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 		}
 
+		// continueWithPropertyPopulation为false，直接return，不进行属性赋值
 		if (!continueWithPropertyPopulation) {
 			return;
 		}
 
+		// 获取此BeanDefinition对应的属性值
 		PropertyValues pvs = (mbd.hasPropertyValues() ? mbd.getPropertyValues() : null);
 
 		if (mbd.getResolvedAutowireMode() == AUTOWIRE_BY_NAME || mbd.getResolvedAutowireMode() == AUTOWIRE_BY_TYPE) {
@@ -1338,7 +1344,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			pvs = newPvs;
 		}
 
+		// 是否拥有InstantiationAwareBeanPostProcessors
 		boolean hasInstAwareBpps = hasInstantiationAwareBeanPostProcessors();
+		// 是否需要进行依赖检测
 		boolean needsDepCheck = (mbd.getDependencyCheck() != AbstractBeanDefinition.DEPENDENCY_CHECK_NONE);
 
 		if (hasInstAwareBpps || needsDepCheck) {
@@ -1346,6 +1354,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				pvs = mbd.getPropertyValues();
 			}
 			PropertyDescriptor[] filteredPds = filterPropertyDescriptorsForDependencyCheck(bw, mbd.allowCaching);
+			// InstantiationAwareBeanPostProcessor对PropertyValues进行处理
 			if (hasInstAwareBpps) {
 				for (BeanPostProcessor bp : getBeanPostProcessors()) {
 					if (bp instanceof InstantiationAwareBeanPostProcessor) {
@@ -1357,11 +1366,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					}
 				}
 			}
+			// 是否需要进行依赖检测
 			if (needsDepCheck) {
 				checkDependencies(beanName, mbd, filteredPds, pvs);
 			}
 		}
 
+		// PropertyValues不为null，进行属性赋值
 		if (pvs != null) {
 			applyPropertyValues(beanName, mbd, bw, pvs);
 		}
@@ -1379,10 +1390,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected void autowireByName(
 			String beanName, AbstractBeanDefinition mbd, BeanWrapper bw, MutablePropertyValues pvs) {
 
+		// 获取所有的未被赋值的non-simple的属性名称（如对其他的Bean的引用）
 		String[] propertyNames = unsatisfiedNonSimpleProperties(mbd, bw);
 		for (String propertyName : propertyNames) {
+			// IOC容器拥有这个属性名为bean name的bean
 			if (containsBean(propertyName)) {
+				// 取出对应的bean
 				Object bean = getBean(propertyName);
+				// 并添加到PropertyValues中
 				pvs.add(propertyName, bean);
 				registerDependentBean(propertyName, beanName);
 				if (logger.isDebugEnabled()) {
@@ -1413,7 +1428,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected void autowireByType(
 			String beanName, AbstractBeanDefinition mbd, BeanWrapper bw, MutablePropertyValues pvs) {
 
+		// 获取自定义的类型转化器
 		TypeConverter converter = getCustomTypeConverter();
+		// 为null，则使用BeanWrapper
 		if (converter == null) {
 			converter = bw;
 		}
