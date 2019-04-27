@@ -476,6 +476,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@Override
 	protected void onRefresh(ApplicationContext context) {
+		// 对springMVC的组件进行初始化
 		initStrategies(context);
 	}
 
@@ -897,6 +898,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Keep a snapshot of the request attributes in case of an include,
 		// to be able to restore the original attributes after the include.
+		// 存储一个初始属性值
 		Map<String, Object> attributesSnapshot = null;
 		if (WebUtils.isIncludeRequest(request)) {
 			attributesSnapshot = new HashMap<>();
@@ -910,6 +912,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		// Make framework objects available to handlers and view objects.
+		// 使得框架对象（如主题theme，资源国际化）可被handler和view对象获取
 		request.setAttribute(WEB_APPLICATION_CONTEXT_ATTRIBUTE, getWebApplicationContext());
 		request.setAttribute(LOCALE_RESOLVER_ATTRIBUTE, this.localeResolver);
 		request.setAttribute(THEME_RESOLVER_ATTRIBUTE, this.themeResolver);
@@ -925,7 +928,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		try {
-			// 进行转发
+			// 进行转发，真正进行处理请求
 			doDispatch(request, response);
 		}
 		finally {
@@ -950,13 +953,17 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * @throws Exception in case of any kind of processing failure
 	 */
 	protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// 当前被处理的request
 		HttpServletRequest processedRequest = request;
+		// 通过HandlerMapping获取的HandlerExecutionChain
 		HandlerExecutionChain mappedHandler = null;
+		// multipart数据是否被解析
 		boolean multipartRequestParsed = false;
 
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
 
 		try {
+			// HandlerAdapter调用HandlerExecutionChain之后得到的ModelAndView对象
 			ModelAndView mv = null;
 			Exception dispatchException = null;
 
@@ -1016,6 +1023,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				// making them available for @ExceptionHandler methods and other scenarios.
 				dispatchException = new NestedServletException("Handler dispatch failed", err);
 			}
+			// 处理最终的结果
 			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
 		}
 		catch (Exception ex) {
@@ -1065,6 +1073,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		boolean errorView = false;
 
 		if (exception != null) {
+			// 异常不为null，且为ModelAndViewDefiningException类型，获取对应的视图
 			if (exception instanceof ModelAndViewDefiningException) {
 				logger.debug("ModelAndViewDefiningException encountered", exception);
 				mv = ((ModelAndViewDefiningException) exception).getModelAndView();
@@ -1078,6 +1087,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Did the handler return a view to render?
 		if (mv != null && !mv.wasCleared()) {
+			// 进行视图渲染
 			render(mv, request, response);
 			if (errorView) {
 				WebUtils.clearErrorRequestAttributes(request);
@@ -1096,6 +1106,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		if (mappedHandler != null) {
+			// 触发拦截器的afterCompletion方法
 			mappedHandler.triggerAfterCompletion(request, response, null);
 		}
 	}

@@ -491,6 +491,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	/**
 	 * Overridden method of {@link HttpServletBean}, invoked after any bean properties
 	 * have been set. Creates this servlet's WebApplicationContext.
+	 * 重写HttpServletBean的initServletBean方法，进行子容器的创建，初始化
 	 */
 	@Override
 	protected final void initServletBean() throws ServletException {
@@ -498,6 +499,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		if (logger.isInfoEnabled()) {
 			logger.info("FrameworkServlet '" + getServletName() + "': initialization started");
 		}
+		// 记录启动时间戳
 		long startTime = System.currentTimeMillis();
 
 		try {
@@ -533,11 +535,13 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 				WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		WebApplicationContext wac = null;
 
+		// 在容器创建的时，已有 容器 被注入进来，则直接使用
 		if (this.webApplicationContext != null) {
 			// A context instance was injected at construction time -> use it
 			wac = this.webApplicationContext;
 			if (wac instanceof ConfigurableWebApplicationContext) {
 				ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) wac;
+				// 容器还未被刷新（refresh），则进行刷新
 				if (!cwac.isActive()) {
 					// The context has not yet been refreshed -> provide services such as
 					// setting the parent context, setting the application context id, etc
@@ -547,6 +551,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 						// 将根容器设置为子容器的父容器
 						cwac.setParent(rootContext);
 					}
+					// 刷新子容器
 					configureAndRefreshWebApplicationContext(cwac);
 				}
 			}
@@ -663,11 +668,13 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			}
 			else {
 				// Generate default id...
+				// 设置一个默认的id
 				wac.setId(ConfigurableWebApplicationContext.APPLICATION_CONTEXT_ID_PREFIX +
 						ObjectUtils.getDisplayString(getServletContext().getContextPath()) + '/' + getServletName());
 			}
 		}
 
+		// 为容器注入ServletContext，ServletConfig等
 		wac.setServletContext(getServletContext());
 		wac.setServletConfig(getServletConfig());
 		wac.setNamespace(getNamespace());
@@ -681,8 +688,11 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			((ConfigurableWebEnvironment) env).initPropertySources(getServletContext(), getServletConfig());
 		}
 
+		// 子类重写，进行后置处理
 		postProcessWebApplicationContext(wac);
 		applyInitializers(wac);
+		// IOC的流程过一遍
+		// AbstractApplicationContext#refresh()
 		wac.refresh();
 	}
 
@@ -859,13 +869,14 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		// 获取http 请求方法为空
 		HttpMethod httpMethod = HttpMethod.resolve(request.getMethod());
-		// 获取http 请求方法为空，或为Patch，则自己处理
+		// 若为Patch或null，则自己处理
 		if (httpMethod == HttpMethod.PATCH || httpMethod == null) {
 			processRequest(request, response);
 		}
 		else {
-			// 否则，交给父类
+			// 否则，交给父类(HttpServlet)，对应的Http方法调用对应的doXX方法（如doGet，doPost）
 			super.service(request, response);
 		}
 	}
@@ -974,6 +985,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	protected final void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		// 记录处理请求的开始的时间戳
 		long startTime = System.currentTimeMillis();
 		Throwable failureCause = null;
 
