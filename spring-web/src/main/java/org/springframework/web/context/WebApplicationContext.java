@@ -101,6 +101,7 @@ public interface WebApplicationContext extends ApplicationContext {
 	 * Return the standard Servlet API ServletContext for this application.
 	 */
 	@Nullable
+	// 获取当前的ServletContext对象
 	ServletContext getServletContext();
 
 }

@@ -91,6 +91,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * Set the unique id of this application context.
 	 * @since 3.0
 	 */
+	// 设置当前context的Id
 	void setId(String id);
 
 	/**
@@ -101,6 +102,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * @param parent the parent context
 	 * @see org.springframework.web.context.ConfigurableWebApplicationContext
 	 */
+	// 设置父容器
 	void setParent(@Nullable ApplicationContext parent);
 
 	/**
@@ -108,6 +110,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * @param environment the new environment
 	 * @since 3.1
 	 */
+	// 设置Environment对象
 	void setEnvironment(ConfigurableEnvironment environment);
 
 	/**
@@ -116,6 +119,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * @since 3.1
 	 */
 	@Override
+	// 获取Environment对象
 	ConfigurableEnvironment getEnvironment();
 
 	/**
@@ -124,6 +128,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * bean definitions get evaluated. To be invoked during context configuration.
 	 * @param postProcessor the factory processor to register
 	 */
+	// 添加BeanFactoryPostProcessor
 	void addBeanFactoryPostProcessor(BeanFactoryPostProcessor postProcessor);
 
 	/**
@@ -136,6 +141,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * @see org.springframework.context.event.ContextRefreshedEvent
 	 * @see org.springframework.context.event.ContextClosedEvent
 	 */
+	// 添加ApplicationListener
 	void addApplicationListener(ApplicationListener<?> listener);
 
 	/**
@@ -145,6 +151,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * resolution rules. It may therefore also override any default rules.
 	 * @since 4.3
 	 */
+	// 添加ProtocolResolver
 	void addProtocolResolver(ProtocolResolver resolver);
 
 	/**
@@ -167,6 +174,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * @see java.lang.Runtime#addShutdownHook
 	 * @see #close()
 	 */
+	// 向JVM注册一个关闭时的hook
 	void registerShutdownHook();
 
 	/**
@@ -188,6 +196,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * @see #close()
 	 * @see #getBeanFactory()
 	 */
+	// 判断此容器是否被refresh过
 	boolean isActive();
 
 	/**
@@ -209,6 +218,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * @see #close()
 	 * @see #addBeanFactoryPostProcessor
 	 */
+	// 获得当前ApplicationContext中的BeanFactory
 	ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException;
 
 }
