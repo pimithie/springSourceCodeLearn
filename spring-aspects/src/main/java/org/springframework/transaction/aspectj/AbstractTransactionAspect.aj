@@ -68,6 +68,7 @@ public abstract aspect AbstractTransactionAspect extends TransactionAspectSuppor
 		// Adapt to TransactionAspectSupport's invokeWithinTransaction...
 		try {
 			return invokeWithinTransaction(methodSignature.getMethod(), txObject.getClass(), new InvocationCallback() {
+				@Override
 				public Object proceedWithInvocation() throws Throwable {
 					return proceed(txObject);
 				}
