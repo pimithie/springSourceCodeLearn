@@ -75,6 +75,7 @@ public class BeanDefinitionVisitor {
 	 * @param beanDefinition the BeanDefinition object to traverse
 	 * @see #resolveStringValue(String)
 	 */
+	// 遍历当前给定BeanDefinition对象的可变的属性值及构造器参数值
 	public void visitBeanDefinition(BeanDefinition beanDefinition) {
 		visitParentName(beanDefinition);
 		visitBeanClassName(beanDefinition);
@@ -142,9 +143,12 @@ public class BeanDefinitionVisitor {
 	}
 
 	protected void visitPropertyValues(MutablePropertyValues pvs) {
+		// 获取当前BeanDefinition的所有Properties
 		PropertyValue[] pvArray = pvs.getPropertyValues();
 		for (PropertyValue pv : pvArray) {
+			// 遍历所有的PropertyValue并对其中的占位符进行解析
 			Object newVal = resolveValue(pv.getValue());
+			// 若解析之后的newVal与oldVal不等，则进行替换
 			if (!ObjectUtils.nullSafeEquals(newVal, pv.getValue())) {
 				pvs.add(pv.getName(), newVal);
 			}
@@ -219,6 +223,7 @@ public class BeanDefinitionVisitor {
 			}
 		}
 		else if (value instanceof String) {
+			// 对带有占位符的StringValue进行解析
 			return resolveStringValue((String) value);
 		}
 		return value;
@@ -293,8 +298,10 @@ public class BeanDefinitionVisitor {
 			throw new IllegalStateException("No StringValueResolver specified - pass a resolver " +
 					"object into the constructor or override the 'resolveStringValue' method");
 		}
+		// 调用valueResolver进行String中占位符进行解析
 		String resolvedValue = this.valueResolver.resolveStringValue(strVal);
 		// Return original String if not modified.
+		// 返回初始值若未进行改变
 		return (strVal.equals(resolvedValue) ? strVal : resolvedValue);
 	}
 

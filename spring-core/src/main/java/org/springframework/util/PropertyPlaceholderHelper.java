@@ -129,10 +129,13 @@ public class PropertyPlaceholderHelper {
 
 		StringBuilder result = new StringBuilder(value);
 
+		// 获取占位符前缀的下标索引
 		int startIndex = value.indexOf(this.placeholderPrefix);
 		while (startIndex != -1) {
+			// 寻找占位符的后缀索引
 			int endIndex = findPlaceholderEndIndex(result, startIndex);
 			if (endIndex != -1) {
+				// 截取占位符前缀与后缀之间表达式
 				String placeholder = result.substring(startIndex + this.placeholderPrefix.length(), endIndex);
 				String originalPlaceholder = placeholder;
 				if (!visitedPlaceholders.add(originalPlaceholder)) {
@@ -140,8 +143,10 @@ public class PropertyPlaceholderHelper {
 							"Circular placeholder reference '" + originalPlaceholder + "' in property definitions");
 				}
 				// Recursive invocation, parsing placeholders contained in the placeholder key.
+				// 递归解析占位符中的占位符
 				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
 				// Now obtain the value for the fully resolved key...
+				// 获取占位符对应的值
 				String propVal = placeholderResolver.resolvePlaceholder(placeholder);
 				if (propVal == null && this.valueSeparator != null) {
 					int separatorIndex = placeholder.indexOf(this.valueSeparator);

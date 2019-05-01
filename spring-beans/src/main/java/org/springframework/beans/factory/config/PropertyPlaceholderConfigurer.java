@@ -144,12 +144,15 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	@Nullable
 	protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
 		String propVal = null;
+		// 为System properties
 		if (systemPropertiesMode == SYSTEM_PROPERTIES_MODE_OVERRIDE) {
 			propVal = resolveSystemProperty(placeholder);
 		}
+		// 为null，则对占位符进行解析
 		if (propVal == null) {
 			propVal = resolvePlaceholder(placeholder, props);
 		}
+		// 仍未空，并且systemPropertiesMode为SYSTEM_PROPERTIES_MODE_FALLBACK，进行回调，获取System properties值
 		if (propVal == null && systemPropertiesMode == SYSTEM_PROPERTIES_MODE_FALLBACK) {
 			propVal = resolveSystemProperty(placeholder);
 		}
@@ -171,6 +174,7 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	 */
 	@Nullable
 	protected String resolvePlaceholder(String placeholder, Properties props) {
+		// 直接从Properties中获取对应的属性值
 		return props.getProperty(placeholder);
 	}
 
@@ -209,7 +213,9 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)
 			throws BeansException {
 
+		// 创建StringValueResolver对象
 		StringValueResolver valueResolver = new PlaceholderResolvingStringValueResolver(props);
+		// 对Properties进行处理
 		doProcessProperties(beanFactoryToProcess, valueResolver);
 	}
 
@@ -229,6 +235,7 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 		@Override
 		@Nullable
 		public String resolveStringValue(String strVal) throws BeansException {
+			// 进行占位符解析
 			String resolved = this.helper.replacePlaceholders(strVal, this.resolver);
 			if (trimValues) {
 				resolved = resolved.trim();
