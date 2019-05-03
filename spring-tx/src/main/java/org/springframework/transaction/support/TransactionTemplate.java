@@ -69,6 +69,7 @@ public class TransactionTemplate extends DefaultTransactionDefinition
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	@Nullable
+	// 事务管理器
 	private PlatformTransactionManager transactionManager;
 
 
@@ -119,6 +120,8 @@ public class TransactionTemplate extends DefaultTransactionDefinition
 
 	@Override
 	public void afterPropertiesSet() {
+		// initialization callback，判断事务管理器TransactionManager是否被注入
+		// 若未注入，则抛出异常
 		if (this.transactionManager == null) {
 			throw new IllegalArgumentException("Property 'transactionManager' is required");
 		}
@@ -134,21 +137,26 @@ public class TransactionTemplate extends DefaultTransactionDefinition
 			return ((CallbackPreferringPlatformTransactionManager) this.transactionManager).execute(this, action);
 		}
 		else {
+			// 获取事务的状态
 			TransactionStatus status = this.transactionManager.getTransaction(this);
 			T result;
 			try {
+				// 在事务中进行执行代码
 				result = action.doInTransaction(status);
 			}
 			catch (RuntimeException | Error ex) {
 				// Transactional code threw application exception -> rollback
+				// 抛出RuntimeException和Error进行事务的回滚
 				rollbackOnException(status, ex);
 				throw ex;
 			}
 			catch (Throwable ex) {
 				// Transactional code threw unexpected exception -> rollback
+				// 对Exception进行事务的回滚
 				rollbackOnException(status, ex);
 				throw new UndeclaredThrowableException(ex, "TransactionCallback threw undeclared checked exception");
 			}
+			// 进行事务的提交
 			this.transactionManager.commit(status);
 			return result;
 		}
@@ -165,6 +173,7 @@ public class TransactionTemplate extends DefaultTransactionDefinition
 
 		logger.debug("Initiating transaction rollback on application exception", ex);
 		try {
+			// 进行事务的回滚
 			this.transactionManager.rollback(status);
 		}
 		catch (TransactionSystemException ex2) {

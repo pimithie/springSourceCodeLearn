@@ -115,6 +115,7 @@ public interface PlatformTransactionManager {
 	 * @throws IllegalTransactionStateException if the given transaction
 	 * is already completed (that is, committed or rolled back)
 	 */
+	// 由对应的TransactionManager实现类进行实现回滚逻辑
 	void rollback(TransactionStatus status) throws TransactionException;
 
 }

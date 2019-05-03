@@ -803,11 +803,11 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 	 */
 	@Override
 	public final void rollback(TransactionStatus status) throws TransactionException {
+		// 若事务已经完成，则抛出异常
 		if (status.isCompleted()) {
 			throw new IllegalTransactionStateException(
 					"Transaction is already completed - do not call commit or rollback more than once per transaction");
 		}
-
 		DefaultTransactionStatus defStatus = (DefaultTransactionStatus) status;
 		processRollback(defStatus, false);
 	}
