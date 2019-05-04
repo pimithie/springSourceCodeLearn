@@ -67,7 +67,9 @@ public class InjectionMetadata {
 		Set<InjectedElement> checkedElements = new LinkedHashSet<>(this.injectedElements.size());
 		for (InjectedElement element : this.injectedElements) {
 			Member member = element.getMember();
+			// 若不是被外部管理成员
 			if (!beanDefinition.isExternallyManagedConfigMember(member)) {
+				// 向BeanDefinition中注册
 				beanDefinition.registerExternallyManagedConfigMember(member);
 				checkedElements.add(element);
 				if (logger.isDebugEnabled()) {
