@@ -44,6 +44,7 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#setCustomTargetSourceCreators
  * @see org.springframework.aop.framework.autoproxy.target.LazyInitTargetSourceCreator
  */
+// 对实例化感知的BeanPostProcessor
 public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 
 	/**
@@ -69,6 +70,7 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 	 * @see org.springframework.beans.factory.support.AbstractBeanDefinition#hasBeanClass
 	 */
 	@Nullable
+	// 在目标Bean实例化之前，是否将其替换为一个proxy bean，而不是去实例化目标Bean
 	default Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
 		return null;
 	}
@@ -88,6 +90,9 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 	 * @throws org.springframework.beans.BeansException in case of errors
 	 * @see #postProcessBeforeInstantiation
 	 */
+	// 在Bean实例化之后，属性赋值（spring属性赋值，autowire）之前进行一次后置处理
+	// 若return false，则不调用后续的InstantiationAwareBeanPostProcessor的此方法，
+	// 也不进行相应的属性赋值
 	default boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
 		return true;
 	}
@@ -111,6 +116,7 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 	 * @see org.springframework.beans.MutablePropertyValues
 	 */
 	@Nullable
+	// 后置处理PropertyValues，可以修改注入到bean中的属性值
 	default PropertyValues postProcessPropertyValues(
 			PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeansException {
 

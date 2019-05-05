@@ -427,6 +427,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			throws BeansException {
 
 		Object result = existingBean;
+		// 遍历所有的BeanPostProcessor，调用其postProcessAfterInitialization方法
 		for (BeanPostProcessor processor : getBeanPostProcessors()) {
 			Object current = processor.postProcessAfterInitialization(result, beanName);
 			if (current == null) {
@@ -481,8 +482,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
-			// 给后置处理一个机会去产生一个代理对象，而不是生成一个目标对象
+			// 给InstantiationAwareBeanPostProcessor一个机会去产生一个代理对象，而不是生成一个目标对象
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
+			// 若proxy bean不为null，则直接return，不进行后续的创建目标bean的流程
 			if (bean != null) {
 				return bean;
 			}
@@ -1035,9 +1037,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (!Boolean.FALSE.equals(mbd.beforeInstantiationResolved)) {
 			// Make sure bean class is actually resolved at this point.
 			if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
+				// 获取目标bean的Class对象
 				Class<?> targetType = determineTargetType(beanName, mbd);
 				if (targetType != null) {
+					// 获取所有的InstantiationAwareBeanPostProcessor，
+					// 并依次调用其postProcessBeforeInstantiation方法
 					bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);
+					// 若返回的proxy bean不为null，则调用的所有的BeanPostProcessor的
+					// postProcessAfterInitialization方法进行初始化之后的回调
+					// 例如，可对proxy bean进行Aop增强
 					if (bean != null) {
 						bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
 					}
@@ -1061,10 +1069,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	@Nullable
 	protected Object applyBeanPostProcessorsBeforeInstantiation(Class<?> beanClass, String beanName) {
+		//  遍历所有的InstantiationAwareBeanPostProcessor
 		for (BeanPostProcessor bp : getBeanPostProcessors()) {
 			if (bp instanceof InstantiationAwareBeanPostProcessor) {
 				InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+				// 依次调用其postProcessBeforeInstantiation
 				Object result = ibp.postProcessBeforeInstantiation(beanClass, beanName);
+				// 如果有一个InstantiationAwareBeanPostProcessor返回了proxy对象
+				// 则直接return
 				if (result != null) {
 					return result;
 				}

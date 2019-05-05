@@ -88,7 +88,7 @@ public interface BeanPostProcessor {
 	 */
 	@Nullable
 	// 在初始化回调（如Spring提供的InitializingBean接口的afterPropertiesSet方法调用，自定义的init-method调用）
-	// 之后进行调用
+	// 之后进行调用(AOP代理Bean由此产生)
 	default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		return bean;
 	}
