@@ -53,6 +53,7 @@ public class AnnotationAwareAspectJAutoProxyCreator extends AspectJAwareAdvisorA
 	private List<Pattern> includePatterns;
 
 	@Nullable
+	// 从@Aspect类中创建Aop通知的工厂
 	private AspectJAdvisorFactory aspectJAdvisorFactory;
 
 	@Nullable

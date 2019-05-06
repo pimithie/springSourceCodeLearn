@@ -338,9 +338,11 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * @return a proxy wrapping the bean, or the raw bean instance as-is
 	 */
 	protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
+		// targetSourcedBeans中包含这个Bean，直接return
 		if (StringUtils.hasLength(beanName) && this.targetSourcedBeans.contains(beanName)) {
 			return bean;
 		}
+		// 被增强的Bean中不包含当前bean，直接return
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
@@ -350,8 +352,10 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		}
 
 		// Create proxy if we have advice.
+		// 获取此bean对应通知和通知器
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		if (specificInterceptors != DO_NOT_PROXY) {
+			// 对应通知和通知器不为null，则放入advisedBeans中
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
 			// 创建代理对象
 			Object proxy = createProxy(
@@ -360,6 +364,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			return proxy;
 		}
 
+		// 走到这，说明当前bean不需要进行代理，进行记录后直接return
 		this.advisedBeans.put(cacheKey, Boolean.FALSE);
 		return bean;
 	}
