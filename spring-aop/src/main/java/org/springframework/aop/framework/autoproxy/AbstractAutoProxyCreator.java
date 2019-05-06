@@ -455,19 +455,26 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
 		}
 
+		// 创建代理工厂
 		ProxyFactory proxyFactory = new ProxyFactory();
+		// 从当前代理创建器拷贝配置
 		proxyFactory.copyFrom(this);
 
+		// 对target class不进行直接代理
 		if (!proxyFactory.isProxyTargetClass()) {
+			// 判断是否采用cglib代理
 			if (shouldProxyTargetClass(beanClass, beanName)) {
 				proxyFactory.setProxyTargetClass(true);
 			}
 			else {
+				// 判断是否可以采用jdk动态代理，若不可以，则利用cglib代理
 				evaluateProxyInterfaces(beanClass, proxyFactory);
 			}
 		}
 
+		// 根据之前获取的通知和通知器，构建Advisor对象
 		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
+		// 将advisors和代理的目标对象存入代理工厂
 		proxyFactory.addAdvisors(advisors);
 		proxyFactory.setTargetSource(targetSource);
 		customizeProxyFactory(proxyFactory);
