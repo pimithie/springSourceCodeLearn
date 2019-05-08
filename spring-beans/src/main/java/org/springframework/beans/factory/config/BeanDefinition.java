@@ -44,6 +44,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * <p>Note that extended bean factories might support further scopes.
 	 * @see #setScope
 	 */
+	// singleton scope---->"singleton"
 	String SCOPE_SINGLETON = ConfigurableBeanFactory.SCOPE_SINGLETON;
 
 	/**
@@ -51,6 +52,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * <p>Note that extended bean factories might support further scopes.
 	 * @see #setScope
 	 */
+	// prototype scope---->"prototype"
 	String SCOPE_PROTOTYPE = ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 
@@ -85,12 +87,14 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	/**
 	 * Set the name of the parent definition of this bean definition, if any.
 	 */
+	// 若存在父BeanDefinition，设置当前BeanDefinition的父BeanDefinition
 	void setParentName(@Nullable String parentName);
 
 	/**
 	 * Return the name of the parent definition of this bean definition, if any.
 	 */
 	@Nullable
+	// 若存在父BeanDefinition，获取父BeanDefinition
 	String getParentName();
 
 	/**
@@ -101,6 +105,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * @see #setFactoryBeanName
 	 * @see #setFactoryMethodName
 	 */
+	// 设置当前BeanDefinition的Class的名称
 	void setBeanClassName(@Nullable String beanClassName);
 
 	/**
@@ -116,6 +121,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * @see #getFactoryMethodName()
 	 */
 	@Nullable
+	// 获取当前BeanDefinition的Class的名称
 	String getBeanClassName();
 
 	/**
@@ -123,6 +129,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * @see #SCOPE_SINGLETON
 	 * @see #SCOPE_PROTOTYPE
 	 */
+	// 设置bean的scope
 	void setScope(@Nullable String scope);
 
 	/**
@@ -130,6 +137,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * or {@code null} if not known yet.
 	 */
 	@Nullable
+	// 获取bean的scope
 	String getScope();
 
 	/**
@@ -137,24 +145,28 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * <p>If {@code false}, the bean will get instantiated on startup by bean
 	 * factories that perform eager initialization of singletons.
 	 */
+	// 设置是否为懒加载
 	void setLazyInit(boolean lazyInit);
 
 	/**
 	 * Return whether this bean should be lazily initialized, i.e. not
 	 * eagerly instantiated on startup. Only applicable to a singleton bean.
 	 */
+	// 获取是否为懒加载
 	boolean isLazyInit();
 
 	/**
 	 * Set the names of the beans that this bean depends on being initialized.
 	 * The bean factory will guarantee that these beans get initialized first.
 	 */
+	// 设置当前bean初始化时所依赖的bean
 	void setDependsOn(@Nullable String... dependsOn);
 
 	/**
 	 * Return the bean names that this bean depends on.
 	 */
 	@Nullable
+	// 获取当前bean初始化时所依赖的bean
 	String[] getDependsOn();
 
 	/**
@@ -164,11 +176,13 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * if the specified bean is not marked as an autowire candidate. As a consequence,
 	 * autowiring by name will nevertheless inject a bean if the name matches.
 	 */
+	// 设置当前bean是否为autowire的候选者
 	void setAutowireCandidate(boolean autowireCandidate);
 
 	/**
 	 * Return whether this bean is a candidate for getting autowired into some other bean.
 	 */
+	// 返回当前bean是否为autowire的候选者
 	boolean isAutowireCandidate();
 
 	/**
@@ -176,11 +190,13 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * <p>If this value is {@code true} for exactly one bean among multiple
 	 * matching candidates, it will serve as a tie-breaker.
 	 */
+	// 设置当前BeanDefinition是否为autowire的候选者中的优先者
 	void setPrimary(boolean primary);
 
 	/**
 	 * Return whether this bean is a primary autowire candidate.
 	 */
+	// 获取当前BeanDefinition是否为autowire的候选者中的优先者
 	boolean isPrimary();
 
 	/**
@@ -188,12 +204,14 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * This the name of the bean to call the specified factory method on.
 	 * @see #setFactoryMethodName
 	 */
+	// 设置当前BeanDefinition所对应的FactoryBean，如果存在的话
 	void setFactoryBeanName(@Nullable String factoryBeanName);
 
 	/**
 	 * Return the factory bean name, if any.
 	 */
 	@Nullable
+	// 返回当前BeanDefinition所对应的FactoryBean，如果存在的话
 	String getFactoryBeanName();
 
 	/**
@@ -204,12 +222,14 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * @see #setFactoryBeanName
 	 * @see #setBeanClassName
 	 */
+	// 设置当前BeanDefinition所对应的FactoryMethod，如果存在的话
 	void setFactoryMethodName(@Nullable String factoryMethodName);
 
 	/**
 	 * Return a factory method, if any.
 	 */
 	@Nullable
+	// 返回当前BeanDefinition所对应的FactoryMethod，如果存在的话
 	String getFactoryMethodName();
 
 	/**
@@ -217,12 +237,14 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * <p>The returned instance can be modified during bean factory post-processing.
 	 * @return the ConstructorArgumentValues object (never {@code null})
 	 */
+	// 获取当前BeanDefinition的构造器参数
 	ConstructorArgumentValues getConstructorArgumentValues();
 
 	/**
 	 * Return if there are constructor argument values defined for this bean.
 	 * @since 5.0.2
 	 */
+	// 返回是否拥有构造器参数
 	default boolean hasConstructorArgumentValues() {
 		return !getConstructorArgumentValues().isEmpty();
 	}
@@ -232,12 +254,14 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * <p>The returned instance can be modified during bean factory post-processing.
 	 * @return the MutablePropertyValues object (never {@code null})
 	 */
+	// 返回当前BeanDefinition中bean在初始化时注入的属性值
 	MutablePropertyValues getPropertyValues();
 
 	/**
 	 * Return if there are property values values defined for this bean.
 	 * @since 5.0.2
 	 */
+	// 返回当前BeanDefinition是否有bean在初始化时注入的属性值
 	default boolean hasPropertyValues() {
 		return !getPropertyValues().isEmpty();
 	}
@@ -250,6 +274,7 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * returned on all calls.
 	 * @see #SCOPE_SINGLETON
 	 */
+	// 返回当前BeanDefinition是否为单例bean
 	boolean isSingleton();
 
 	/**
@@ -258,11 +283,13 @@ public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 	 * @since 3.0
 	 * @see #SCOPE_PROTOTYPE
 	 */
+	// 返回当前BeanDefinition是否为多例bean
 	boolean isPrototype();
 
 	/**
 	 * Return whether this bean is "abstract", that is, not meant to be instantiated.
 	 */
+	// 返回当前BeanDefinition是否为抽象的（只用于当作一个模板，提取bean中重复的属性的定义）
 	boolean isAbstract();
 
 	/**
