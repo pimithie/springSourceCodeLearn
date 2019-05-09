@@ -62,30 +62,35 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Constant for the default scope name: {@code ""}, equivalent to singleton
 	 * status unless overridden from a parent bean definition (if applicable).
 	 */
+	// 常量表示BeanDefinition默认的scope，即singleton，单例
 	public static final String SCOPE_DEFAULT = "";
 
 	/**
 	 * Constant that indicates no autowiring at all.
 	 * @see #setAutowireMode
 	 */
+	// 常量表示不进行autowire
 	public static final int AUTOWIRE_NO = AutowireCapableBeanFactory.AUTOWIRE_NO;
 
 	/**
 	 * Constant that indicates autowiring bean properties by name.
 	 * @see #setAutowireMode
 	 */
+	// 常量表示通过bean的name进行autowire
 	public static final int AUTOWIRE_BY_NAME = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
 
 	/**
 	 * Constant that indicates autowiring bean properties by type.
 	 * @see #setAutowireMode
 	 */
+	// 常量表示通过bean的类型（type）进行autowire
 	public static final int AUTOWIRE_BY_TYPE = AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE;
 
 	/**
 	 * Constant that indicates autowiring a constructor.
 	 * @see #setAutowireMode
 	 */
+	// 常量表示通过bean的constructor进行autowire
 	public static final int AUTOWIRE_CONSTRUCTOR = AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR;
 
 	/**
@@ -102,12 +107,14 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Constant that indicates no dependency check at all.
 	 * @see #setDependencyCheck
 	 */
+	// 常量表示不进行依赖检测
 	public static final int DEPENDENCY_CHECK_NONE = 0;
 
 	/**
 	 * Constant that indicates dependency checking for object references.
 	 * @see #setDependencyCheck
 	 */
+	// 常量表示进行对象引用依赖检测
 	public static final int DEPENDENCY_CHECK_OBJECTS = 1;
 
 	/**
@@ -115,6 +122,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * @see #setDependencyCheck
 	 * @see org.springframework.beans.BeanUtils#isSimpleProperty
 	 */
+	// 常量表示进行简单属性（int，String..）依赖检测
 	public static final int DEPENDENCY_CHECK_SIMPLE = 2;
 
 	/**
@@ -122,6 +130,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * (object references as well as "simple" properties).
 	 * @see #setDependencyCheck
 	 */
+	// 常量表示进行所有的依赖检测
 	public static final int DEPENDENCY_CHECK_ALL = 3;
 
 	/**
@@ -138,24 +147,33 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 
 	@Nullable
+	// 当前BeanDefinition的Class对象
 	private volatile Object beanClass;
 
 	@Nullable
+	// scope默认为singleton，单例
 	private String scope = SCOPE_DEFAULT;
 
+	// 是否为抽象BeanDefinition，默认为false
 	private boolean abstractFlag = false;
 
+	// 是否为懒加载，默认为false
 	private boolean lazyInit = false;
 
+	// 是否进行自动装配，默认不进行
 	private int autowireMode = AUTOWIRE_NO;
 
+	// 是否进行依赖检测，默认不进行
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
 	@Nullable
+	// 当前BeanDefinition的依赖bean
 	private String[] dependsOn;
 
+	// 是否为自动装配的候选者，默认为true
 	private boolean autowireCandidate = true;
 
+	// 是否为首选bean，默认为false
 	private boolean primary = false;
 
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();
@@ -168,24 +186,30 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	private boolean lenientConstructorResolution = true;
 
 	@Nullable
+	// 当前BeanDefinition的FactoryBean的bean name
 	private String factoryBeanName;
 
 	@Nullable
+	// 当前BeanDefinition的工厂方法的name
 	private String factoryMethodName;
 
 	@Nullable
+	// 当前BeanDefinition的构造器的参数值
 	private ConstructorArgumentValues constructorArgumentValues;
 
 	@Nullable
+	// 当前BeanDefinition的构造器的参数值
 	private MutablePropertyValues propertyValues;
 
 	@Nullable
 	private MethodOverrides methodOverrides;
 
 	@Nullable
+	// 自定义init方法
 	private String initMethodName;
 
 	@Nullable
+	// 自定义destroy方法
 	private String destroyMethodName;
 
 	private boolean enforceInitMethod = true;
@@ -290,6 +314,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * in the given bean definition.
 	 * </ul>
 	 */
+	// 对当前BeanDefinition进行重写
 	public void overrideFrom(BeanDefinition other) {
 		if (StringUtils.hasLength(other.getBeanClassName())) {
 			setBeanClassName(other.getBeanClassName());
@@ -354,6 +379,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Apply the provided default values to this bean.
 	 * @param defaults the defaults to apply
 	 */
+	// 使用默认值
 	public void applyDefaults(BeanDefinitionDefaults defaults) {
 		setLazyInit(defaults.isLazyInit());
 		setAutowireMode(defaults.getAutowireMode());
