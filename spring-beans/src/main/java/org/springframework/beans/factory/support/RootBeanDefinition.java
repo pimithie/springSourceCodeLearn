@@ -57,8 +57,10 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	private BeanDefinitionHolder decoratedDefinition;
 
 	@Nullable
+	// qualified的值
 	private AnnotatedElement qualifiedElement;
 
+	// 当前BeanDefinition对应bean是否允许缓存（即单例bean）
 	boolean allowCaching = true;
 
 	boolean isFactoryMethodUnique = false;
@@ -68,10 +70,12 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	/** Package-visible field for caching the determined Class of a given bean definition */
 	@Nullable
+	// 当前BeanDefinition对应的Class对象
 	volatile Class<?> resolvedTargetType;
 
 	/** Package-visible field for caching the return type of a generically typed factory method */
 	@Nullable
+	// 工厂方法（创建bean）返回值的类型
 	volatile ResolvableType factoryMethodReturnType;
 
 	/** Common lock for the four constructor fields below */
@@ -86,10 +90,12 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	/** Package-visible field for caching fully resolved constructor arguments */
 	@Nullable
+	// 缓存所有被解析的构造器参数
 	Object[] resolvedConstructorArguments;
 
 	/** Package-visible field for caching partly prepared constructor arguments */
 	@Nullable
+	// 缓存部分预准备的构造器参数
 	Object[] preparedConstructorArguments;
 
 	/** Common lock for the two post-processing fields below */
@@ -129,24 +135,10 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	 * @param beanClass the class of the bean to instantiate
 	 * @see #setBeanClass
 	 */
+	// 为一个单例bean创建一个RootBeanDefinition
 	public RootBeanDefinition(@Nullable Class<?> beanClass) {
 		super();
 		setBeanClass(beanClass);
-	}
-
-	/**
-	 * Create a new RootBeanDefinition for a singleton bean, constructing each instance
-	 * through calling the given supplier (possibly a lambda or method reference).
-	 * @param beanClass the class of the bean to instantiate
-	 * @param instanceSupplier the supplier to construct a bean instance,
-	 * as an alternative to a declaratively specified factory method
-	 * @since 5.0
-	 * @see #setInstanceSupplier
-	 */
-	public <T> RootBeanDefinition(@Nullable Class<T> beanClass, @Nullable Supplier<T> instanceSupplier) {
-		super();
-		setBeanClass(beanClass);
-		setInstanceSupplier(instanceSupplier);
 	}
 
 	/**
@@ -208,6 +200,22 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	}
 
 	/**
+	 * Create a new RootBeanDefinition for a singleton bean, constructing each instance
+	 * through calling the given supplier (possibly a lambda or method reference).
+	 * @param beanClass the class of the bean to instantiate
+	 * @param instanceSupplier the supplier to construct a bean instance,
+	 * as an alternative to a declaratively specified factory method
+	 * @since 5.0
+	 * @see #setInstanceSupplier
+	 */
+	// 为一个单例bean创建一个RootBeanDefinition，创建每一个实例通过调用指定的supplier（可能为一个lambda，或一个方法引用）
+	public <T> RootBeanDefinition(@Nullable Class<T> beanClass, @Nullable Supplier<T> instanceSupplier) {
+		super();
+		setBeanClass(beanClass);
+		setInstanceSupplier(instanceSupplier);
+	}
+
+	/**
 	 * Create a new RootBeanDefinition for a singleton,
 	 * providing constructor arguments and property values.
 	 * <p>Takes a bean class name to avoid eager loading of the bean class.
@@ -215,6 +223,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	 * @param cargs the constructor argument values to apply
 	 * @param pvs the property values to apply
 	 */
+	// 为一个指定scope的bean创建一个RootBeanDefinition，创建每一个实例通过调用指定的supplier（可能为一个lambda，或一个方法引用）
 	public RootBeanDefinition(String beanClassName, ConstructorArgumentValues cargs, MutablePropertyValues pvs) {
 		super(cargs, pvs);
 		setBeanClassName(beanClassName);
@@ -225,6 +234,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	 * bean definition.
 	 * @param original the original bean definition to copy from
 	 */
+	// 从指定的RootBeanDefinition深拷贝一份RootBeanDefinition
 	public RootBeanDefinition(RootBeanDefinition original) {
 		super(original);
 		this.decoratedDefinition = original.decoratedDefinition;
