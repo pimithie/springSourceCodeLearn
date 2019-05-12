@@ -34,12 +34,14 @@ import java.util.EventListener;
  * @see org.springframework.context.event.ApplicationEventMulticaster
  */
 @FunctionalInterface
+// 对jdk标准的观察者模式的封装
 public interface ApplicationListener<E extends ApplicationEvent> extends EventListener {
 
 	/**
 	 * Handle an application event.
 	 * @param event the event to respond to
 	 */
+	// 进行对应的事件处理
 	void onApplicationEvent(E event);
 
 }

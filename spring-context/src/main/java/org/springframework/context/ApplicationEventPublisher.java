@@ -29,6 +29,7 @@ package org.springframework.context;
  * @see org.springframework.context.event.EventPublicationInterceptor
  */
 @FunctionalInterface
+// 封装事件发布功能，作为ApplicationContext的父接口
 public interface ApplicationEventPublisher {
 
 	/**
@@ -38,6 +39,7 @@ public interface ApplicationEventPublisher {
 	 * @param event the event to publish
 	 * @see org.springframework.web.context.support.RequestHandledEvent
 	 */
+	// 发布具体事件
 	default void publishEvent(ApplicationEvent event) {
 		publishEvent((Object) event);
 	}

@@ -386,10 +386,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Decorate event as an ApplicationEvent if necessary
 		ApplicationEvent applicationEvent;
+		// 若为ApplicationEvent，则进行强转
 		if (event instanceof ApplicationEvent) {
 			applicationEvent = (ApplicationEvent) event;
 		}
 		else {
+			// 否则新建一个PayloadApplicationEvent（容器内部所用）
 			applicationEvent = new PayloadApplicationEvent<>(this, event);
 			if (eventType == null) {
 				eventType = ((PayloadApplicationEvent<?>) applicationEvent).getResolvableType();
@@ -401,10 +403,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			this.earlyApplicationEvents.add(applicationEvent);
 		}
 		else {
+			// 获取事件发布器（publisher），进行事件发布
 			getApplicationEventMulticaster().multicastEvent(applicationEvent, eventType);
 		}
 
 		// Publish event via parent context as well...
+		// 若当前容器有父容器，则在父容器中也发布相应的事件
 		if (this.parent != null) {
 			if (this.parent instanceof AbstractApplicationContext) {
 				((AbstractApplicationContext) this.parent).publishEvent(event, eventType);

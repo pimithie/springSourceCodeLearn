@@ -31,6 +31,7 @@ public abstract class ApplicationEvent extends EventObject {
 	private static final long serialVersionUID = 7099057708183571937L;
 
 	/** System time when the event happened */
+	// 事件发生的时间戳
 	private final long timestamp;
 
 
@@ -39,6 +40,7 @@ public abstract class ApplicationEvent extends EventObject {
 	 * @param source the object on which the event initially occurred (never {@code null})
 	 */
 	public ApplicationEvent(Object source) {
+		// 初始化事件源
 		super(source);
 		this.timestamp = System.currentTimeMillis();
 	}
@@ -47,6 +49,7 @@ public abstract class ApplicationEvent extends EventObject {
 	/**
 	 * Return the system time in milliseconds when the event happened.
 	 */
+	// 返回事件发生的时间戳
 	public final long getTimestamp() {
 		return this.timestamp;
 	}
