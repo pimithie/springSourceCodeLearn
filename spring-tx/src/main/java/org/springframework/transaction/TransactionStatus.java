@@ -43,6 +43,7 @@ public interface TransactionStatus extends SavepointManager, Flushable {
 	 * in an existing transaction, or potentially not running in an actual
 	 * transaction in the first place.
 	 */
+	// 判断当前事务是否为新建new的，返回false代表正在加入一个已经存在的事务，或者并没有实际运行
 	boolean isNewTransaction();
 
 	/**
@@ -56,6 +57,7 @@ public interface TransactionStatus extends SavepointManager, Flushable {
 	 * @see #rollbackToSavepoint(Object)
 	 * @see #releaseSavepoint(Object)
 	 */
+	// 判断当前事务是否携带savepoint，存档点
 	boolean hasSavepoint();
 
 	/**
@@ -69,12 +71,14 @@ public interface TransactionStatus extends SavepointManager, Flushable {
 	 * @see org.springframework.transaction.support.TransactionCallback#doInTransaction
 	 * @see org.springframework.transaction.interceptor.TransactionAttribute#rollbackOn
 	 */
+	// 将当前事务进行回滚
 	void setRollbackOnly();
 
 	/**
 	 * Return whether the transaction has been marked as rollback-only
 	 * (either by the application or by the transaction infrastructure).
 	 */
+	// 判断当前事务是否为rollback only
 	boolean isRollbackOnly();
 
 	/**
@@ -94,6 +98,7 @@ public interface TransactionStatus extends SavepointManager, Flushable {
 	 * @see PlatformTransactionManager#commit
 	 * @see PlatformTransactionManager#rollback
 	 */
+	// 判断当前事务是否已经提交或回滚
 	boolean isCompleted();
 
 }
