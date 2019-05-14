@@ -297,6 +297,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/** MultipartResolver used by this servlet */
 	@Nullable
+	// 当前DispatcherServlet使用的MultipartResolver
 	private MultipartResolver multipartResolver;
 
 	/** LocaleResolver used by this servlet */

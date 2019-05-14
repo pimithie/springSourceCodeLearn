@@ -82,6 +82,7 @@ import javax.servlet.http.HttpServletRequest;
  * @see org.springframework.web.multipart.support.StringMultipartFileEditor
  * @see org.springframework.web.servlet.DispatcherServlet
  */
+// Content-Type为Multipart/*的解析器（策略接口）
 public interface MultipartResolver {
 
 	/**
@@ -91,6 +92,7 @@ public interface MultipartResolver {
 	 * @param request the servlet request to be evaluated
 	 * @return whether the request contains multipart content
 	 */
+	// 判断当前HttpServletRequest是否为Multipart请求
 	boolean isMultipart(HttpServletRequest request);
 
 	/**
@@ -110,6 +112,7 @@ public interface MultipartResolver {
 	 * @see javax.servlet.http.HttpServletRequest#getParameterNames
 	 * @see javax.servlet.http.HttpServletRequest#getParameterMap
 	 */
+	// 将当前request解析为MultipartHttpServletRequest
 	MultipartHttpServletRequest resolveMultipart(HttpServletRequest request) throws MultipartException;
 
 	/**
@@ -117,6 +120,7 @@ public interface MultipartResolver {
 	 * like a storage for the uploaded files.
 	 * @param request the request to cleanup resources for
 	 */
+	// 清空当前multipart请求的所有资源，如临时文件
 	void cleanupMultipart(MultipartHttpServletRequest request);
 
 }
