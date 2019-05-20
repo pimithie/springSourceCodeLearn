@@ -76,6 +76,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 			}
 		}
 		// Fallback: generate a unique default bean name.
+		// 产生默认的beanName
 		return buildDefaultBeanName(definition, registry);
 	}
 
@@ -149,9 +150,12 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	 * @return the default bean name (never {@code null})
 	 */
 	protected String buildDefaultBeanName(BeanDefinition definition) {
+		// 获取对应的Class name
 		String beanClassName = definition.getBeanClassName();
 		Assert.state(beanClassName != null, "No bean class name set");
+		// 获取简短的ClassName
 		String shortClassName = ClassUtils.getShortName(beanClassName);
+		// 将类名的首字母小写后返回(调用jdk的Introspector)
 		return Introspector.decapitalize(shortClassName);
 	}
 

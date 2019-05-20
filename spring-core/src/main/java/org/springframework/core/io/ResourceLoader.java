@@ -79,6 +79,7 @@ public interface ResourceLoader {
 	 * @see org.springframework.util.ClassUtils#forName(String, ClassLoader)
 	 */
 	@Nullable
+	// 暴露当前ResourceLoader的classloader
 	ClassLoader getClassLoader();
 
 }

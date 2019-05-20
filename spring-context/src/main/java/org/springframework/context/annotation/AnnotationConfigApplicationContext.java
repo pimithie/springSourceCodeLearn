@@ -52,8 +52,10 @@ import org.springframework.util.Assert;
  */
 public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
 
+	// 读取注解BeanDefinition数据的reader
 	private final AnnotatedBeanDefinitionReader reader;
 
+	// <context:component-scan>或@ComponentScan 组件扫描的扫描器
 	private final ClassPathBeanDefinitionScanner scanner;
 
 
@@ -121,6 +123,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * @see AnnotatedBeanDefinitionReader#setBeanNameGenerator
 	 * @see ClassPathBeanDefinitionScanner#setBeanNameGenerator
 	 */
+	// 提供一个自定义的BeanName的生成器
 	public void setBeanNameGenerator(BeanNameGenerator beanNameGenerator) {
 		this.reader.setBeanNameGenerator(beanNameGenerator);
 		this.scanner.setBeanNameGenerator(beanNameGenerator);
@@ -153,6 +156,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * @see #scan(String...)
 	 * @see #refresh()
 	 */
+	// 利用reader读取配置类中的BeanDefinition信息
 	public void register(Class<?>... annotatedClasses) {
 		Assert.notEmpty(annotatedClasses, "At least one annotated class must be specified");
 		this.reader.register(annotatedClasses);
@@ -166,6 +170,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * @see #register(Class...)
 	 * @see #refresh()
 	 */
+	// 利用scanner扫描组件类(在对应的base package及其子包下扫描)
 	public void scan(String... basePackages) {
 		Assert.notEmpty(basePackages, "At least one base package must be specified");
 		this.scanner.scan(basePackages);
