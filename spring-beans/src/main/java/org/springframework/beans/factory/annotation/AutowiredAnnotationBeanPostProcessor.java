@@ -376,8 +376,10 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	public PropertyValues postProcessPropertyValues(
 			PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeanCreationException {
 
+		// 寻找进行注入的元数据
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, bean.getClass(), pvs);
 		try {
+			// 进行元数据注入
 			metadata.inject(bean, beanName, pvs);
 		}
 		catch (BeanCreationException ex) {
@@ -396,9 +398,12 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	 * @throws BeanCreationException if autowiring failed
 	 */
 	public void processInjection(Object bean) throws BeanCreationException {
+		// 获得当前被注入bean的Class
 		Class<?> clazz = bean.getClass();
+		// 根据bean的Class获取到注入的元数据
 		InjectionMetadata metadata = findAutowiringMetadata(clazz.getName(), clazz, null);
 		try {
+			// 进行依赖注入
 			metadata.inject(bean, null, null);
 		}
 		catch (BeanCreationException ex) {

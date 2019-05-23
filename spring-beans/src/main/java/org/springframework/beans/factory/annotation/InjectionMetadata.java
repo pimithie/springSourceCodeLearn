@@ -85,10 +85,12 @@ public class InjectionMetadata {
 		Collection<InjectedElement> elementsToIterate =
 				(checkedElements != null ? checkedElements : this.injectedElements);
 		if (!elementsToIterate.isEmpty()) {
+			// 对所有被注入元素进行遍历
 			for (InjectedElement element : elementsToIterate) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Processing injected element of bean '" + beanName + "': " + element);
 				}
+				// 对元素进行注入
 				element.inject(target, beanName, pvs);
 			}
 		}
@@ -176,16 +178,19 @@ public class InjectionMetadata {
 		protected void inject(Object target, @Nullable String requestingBeanName, @Nullable PropertyValues pvs)
 				throws Throwable {
 
+			// 若为字段Field，则通过反射进行注入
 			if (this.isField) {
 				Field field = (Field) this.member;
 				ReflectionUtils.makeAccessible(field);
 				field.set(target, getResourceToInject(target, requestingBeanName));
 			}
 			else {
+				// 若不为字段，则检测属性值是否跳过
 				if (checkPropertySkipping(pvs)) {
 					return;
 				}
 				try {
+					// 为方法Method对象，则通过反射进行方法注入(即调用目标方法)
 					Method method = (Method) this.member;
 					ReflectionUtils.makeAccessible(method);
 					method.invoke(target, getResourceToInject(target, requestingBeanName));

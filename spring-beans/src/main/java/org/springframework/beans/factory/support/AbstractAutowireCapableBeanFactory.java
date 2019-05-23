@@ -1371,6 +1371,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				for (BeanPostProcessor bp : getBeanPostProcessors()) {
 					if (bp instanceof InstantiationAwareBeanPostProcessor) {
 						InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+						// @Autowired注解的依赖注入在此进行，即在BeanDefinition(如从xml中读取到的bean的属性元数据)中的属性赋值之前
+						// 所以xml中的属性赋值会覆盖@Autowired注解注入的属性
 						pvs = ibp.postProcessPropertyValues(pvs, filteredPds, bw.getWrappedInstance(), beanName);
 						if (pvs == null) {
 							return;
