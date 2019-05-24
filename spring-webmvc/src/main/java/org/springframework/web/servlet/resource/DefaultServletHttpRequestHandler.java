@@ -53,31 +53,39 @@ import org.springframework.web.context.ServletContextAware;
 public class DefaultServletHttpRequestHandler implements HttpRequestHandler, ServletContextAware {
 
 	/** Default Servlet name used by Tomcat, Jetty, JBoss, and GlassFish */
+	// Tomcat，Jetty，JBoss和GlassFish默认的servlet name
 	private static final String COMMON_DEFAULT_SERVLET_NAME = "default";
 
 	/** Default Servlet name used by Google App Engine */
+	// Google App Engine默认的servlet name
 	private static final String GAE_DEFAULT_SERVLET_NAME = "_ah_default";
 
 	/** Default Servlet name used by Resin */
+	// Resin默认的servlet name
 	private static final String RESIN_DEFAULT_SERVLET_NAME = "resin-file";
 
 	/** Default Servlet name used by WebLogic */
+	// WebLogic默认的servlet name
 	private static final String WEBLOGIC_DEFAULT_SERVLET_NAME = "FileServlet";
 
 	/** Default Servlet name used by WebSphere */
+	// WebSphere默认的servlet name
 	private static final String WEBSPHERE_DEFAULT_SERVLET_NAME = "SimpleFileServlet";
 
 
 	@Nullable
+	// 当前servlet默认的servlet name
 	private String defaultServletName;
 
 	@Nullable
+	// 当前web应用的ServletContext
 	private ServletContext servletContext;
 
 
 	/**
 	 * Set the name of the default Servlet to be forwarded to for static resource requests.
 	 */
+	// 设置当前servlet默认的servlet name
 	public void setDefaultServletName(String defaultServletName) {
 		this.defaultServletName = defaultServletName;
 	}
@@ -89,7 +97,9 @@ public class DefaultServletHttpRequestHandler implements HttpRequestHandler, Ser
 	 */
 	@Override
 	public void setServletContext(ServletContext servletContext) {
+		// 设置ServletContext
 		this.servletContext = servletContext;
+		// 获取当前servlet容器对应的Default Servlet（处理静态资源的servlet）
 		if (!StringUtils.hasText(this.defaultServletName)) {
 			if (this.servletContext.getNamedDispatcher(COMMON_DEFAULT_SERVLET_NAME) != null) {
 				this.defaultServletName = COMMON_DEFAULT_SERVLET_NAME;
@@ -119,11 +129,13 @@ public class DefaultServletHttpRequestHandler implements HttpRequestHandler, Ser
 			throws ServletException, IOException {
 
 		Assert.state(this.servletContext != null, "No ServletContext set");
+		// 获取对应的Default Servlet
 		RequestDispatcher rd = this.servletContext.getNamedDispatcher(this.defaultServletName);
 		if (rd == null) {
 			throw new IllegalStateException("A RequestDispatcher could not be located for the default servlet '" +
 					this.defaultServletName + "'");
 		}
+		// 转发给当前Servlet容器的Default Servlet
 		rd.forward(request, response);
 	}
 
