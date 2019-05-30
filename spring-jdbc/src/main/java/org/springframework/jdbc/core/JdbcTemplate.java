@@ -99,30 +99,36 @@ import org.springframework.util.StringUtils;
  */
 public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 
+	// 返回结果集的前缀
 	private static final String RETURN_RESULT_SET_PREFIX = "#result-set-";
 
+	// 返回影响行数的前缀
 	private static final String RETURN_UPDATE_COUNT_PREFIX = "#update-count-";
 
 
 	/** If this variable is false, we will throw exceptions on SQL warnings. */
+	//  如果ignoreWarnings为false，并且SQL抛出了警告，则抛出异常
 	private boolean ignoreWarnings = true;
 
 	/**
 	 * If this variable is set to a non-negative value, it will be used for setting the
 	 * fetchSize property on statements used for query processing.
 	 */
+	// fetchSize为正数时进行设置语句的fetchSize属性
 	private int fetchSize = -1;
 
 	/**
 	 * If this variable is set to a non-negative value, it will be used for setting the
 	 * maxRows property on statements used for query processing.
 	 */
+	// maxRows为正数时进行设置语句的maxRows属性
 	private int maxRows = -1;
 
 	/**
 	 * If this variable is set to a non-negative value, it will be used for setting the
 	 * queryTimeout property on statements used for query processing.
 	 */
+	// sql语句查询超时设置，queryTimeout为正数时进行设置语句的queryTimeout属性
 	private int queryTimeout = -1;
 
 	/**
@@ -596,12 +602,17 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 			logger.debug("Executing prepared SQL statement" + (sql != null ? " [" + sql + "]" : ""));
 		}
 
+		// 从数据库连接池中获取Connection对象
 		Connection con = DataSourceUtils.getConnection(obtainDataSource());
 		PreparedStatement ps = null;
 		try {
+			// 创建PreparedStatement
 			ps = psc.createPreparedStatement(con);
+			// 设置sql查询参数
 			applyStatementSettings(ps);
+			// 将创建PreparedStatement交由PreparedStatementCallback执行
 			T result = action.doInPreparedStatement(ps);
+			// 处理sql警告
 			handleWarnings(ps);
 			return result;
 		}
@@ -1314,15 +1325,19 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 	 * @see #setQueryTimeout
 	 * @see org.springframework.jdbc.datasource.DataSourceUtils#applyTransactionTimeout
 	 */
+	// 设置sql查询的一些属性值
 	protected void applyStatementSettings(Statement stmt) throws SQLException {
+		// 获取fetchSize
 		int fetchSize = getFetchSize();
 		if (fetchSize != -1) {
 			stmt.setFetchSize(fetchSize);
 		}
+		// 获取maxRows
 		int maxRows = getMaxRows();
 		if (maxRows != -1) {
 			stmt.setMaxRows(maxRows);
 		}
+		// 设置sql查询超时时间
 		DataSourceUtils.applyTimeout(stmt, getDataSource(), getQueryTimeout());
 	}
 
