@@ -42,6 +42,7 @@ import org.springframework.lang.Nullable;
  * @author Arjen Poutsma
  * @since 1.1.3
  */
+// 集合工具类
 public abstract class CollectionUtils {
 
 	/**
@@ -50,6 +51,7 @@ public abstract class CollectionUtils {
 	 * @param collection the Collection to check
 	 * @return whether the given Collection is empty
 	 */
+	// 判断Collection是否为空
 	public static boolean isEmpty(@Nullable Collection<?> collection) {
 		return (collection == null || collection.isEmpty());
 	}
@@ -60,6 +62,7 @@ public abstract class CollectionUtils {
 	 * @param map the Map to check
 	 * @return whether the given Map is empty
 	 */
+	// 判断Map是否为空
 	public static boolean isEmpty(@Nullable Map<?, ?> map) {
 		return (map == null || map.isEmpty());
 	}
@@ -77,6 +80,7 @@ public abstract class CollectionUtils {
 	 * @see Arrays#asList(Object[])
 	 */
 	@SuppressWarnings("rawtypes")
+	// 将数组转为List集合
 	public static List arrayToList(@Nullable Object source) {
 		return Arrays.asList(ObjectUtils.toObjectArray(source));
 	}
@@ -87,6 +91,7 @@ public abstract class CollectionUtils {
 	 * @param collection the target Collection to merge the array into
 	 */
 	@SuppressWarnings("unchecked")
+	// 将数组中的元素加入到集合中
 	public static <E> void mergeArrayIntoCollection(@Nullable Object array, Collection<E> collection) {
 		Object[] arr = ObjectUtils.toObjectArray(array);
 		for (Object elem : arr) {
@@ -103,6 +108,7 @@ public abstract class CollectionUtils {
 	 * @param map the target Map to merge the properties into
 	 */
 	@SuppressWarnings("unchecked")
+	// 将Properties中键值对加入到Map中
 	public static <K, V> void mergePropertiesIntoMap(@Nullable Properties props, Map<K, V> map) {
 		if (props != null) {
 			for (Enumeration<?> en = props.propertyNames(); en.hasMoreElements();) {
@@ -124,6 +130,7 @@ public abstract class CollectionUtils {
 	 * @param element the element to look for
 	 * @return {@code true} if found, {@code false} otherwise
 	 */
+	// 判断给定的迭代器中是否有指定元素
 	public static boolean contains(@Nullable Iterator<?> iterator, Object element) {
 		if (iterator != null) {
 			while (iterator.hasNext()) {
@@ -438,6 +445,7 @@ public abstract class CollectionUtils {
 	 * Adapts a Map to the MultiValueMap contract.
 	 */
 	@SuppressWarnings("serial")
+	// MultiValueMap适配器
 	private static class MultiValueMapAdapter<K, V> implements MultiValueMap<K, V>, Serializable {
 
 		private final Map<K, List<V>> map;
@@ -449,6 +457,7 @@ public abstract class CollectionUtils {
 
 		@Override
 		@Nullable
+		// 获取Map中的第一个元素
 		public V getFirst(K key) {
 			List<V> values = this.map.get(key);
 			return (values != null ? values.get(0) : null);
