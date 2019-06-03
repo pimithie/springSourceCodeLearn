@@ -561,7 +561,9 @@ public class MethodParameter {
 	@SuppressWarnings("unchecked")
 	@Nullable
 	public <A extends Annotation> A getParameterAnnotation(Class<A> annotationType) {
+		// 获取改参数的所有注解
 		Annotation[] anns = getParameterAnnotations();
+		// 遍历所有的注解，寻找目标Annotation
 		for (Annotation ann : anns) {
 			if (annotationType.isInstance(ann)) {
 				return (A) ann;

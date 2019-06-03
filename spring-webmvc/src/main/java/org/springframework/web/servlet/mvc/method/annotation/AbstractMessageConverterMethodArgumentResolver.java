@@ -164,14 +164,17 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 	protected <T> Object readWithMessageConverters(HttpInputMessage inputMessage, MethodParameter parameter,
 			Type targetType) throws IOException, HttpMediaTypeNotSupportedException, HttpMessageNotReadableException {
 
+		// http请求头部Content-Type
 		MediaType contentType;
 		boolean noContentType = false;
 		try {
+			// 从HttpServletRequest中获取Content-Type
 			contentType = inputMessage.getHeaders().getContentType();
 		}
 		catch (InvalidMediaTypeException ex) {
 			throw new HttpMediaTypeNotSupportedException(ex.getMessage());
 		}
+		// 若没有contentType字段，则默认为application/octet-stream
 		if (contentType == null) {
 			noContentType = true;
 			contentType = MediaType.APPLICATION_OCTET_STREAM;
@@ -191,6 +194,7 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 		try {
 			message = new EmptyBodyCheckingHttpInputMessage(inputMessage);
 
+			// 遍历所有的HttpMessageConverter
 			for (HttpMessageConverter<?> converter : this.messageConverters) {
 				Class<HttpMessageConverter<?>> converterType = (Class<HttpMessageConverter<?>>) converter.getClass();
 				GenericHttpMessageConverter<?> genericConverter =
@@ -200,6 +204,7 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 					if (logger.isDebugEnabled()) {
 						logger.debug("Read [" + targetType + "] as \"" + contentType + "\" with [" + converter + "]");
 					}
+					// 若http请求报文有请求体，进行AOP前后处理
 					if (message.hasBody()) {
 						HttpInputMessage msgToUse =
 								getAdvice().beforeBodyRead(message, parameter, targetType, converterType);

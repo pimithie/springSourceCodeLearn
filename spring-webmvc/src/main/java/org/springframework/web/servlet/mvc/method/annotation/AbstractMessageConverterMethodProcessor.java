@@ -157,8 +157,11 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 	protected <T> void writeWithMessageConverters(T value, MethodParameter returnType, NativeWebRequest webRequest)
 			throws IOException, HttpMediaTypeNotAcceptableException, HttpMessageNotWritableException {
 
+		// 获取http请求报文信息
 		ServletServerHttpRequest inputMessage = createInputMessage(webRequest);
+		// 创建http相应消息
 		ServletServerHttpResponse outputMessage = createOutputMessage(webRequest);
+		// 使用MessageConverter进行write
 		writeWithMessageConverters(value, returnType, inputMessage, outputMessage);
 	}
 
@@ -265,12 +268,14 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 
 		if (selectedMediaType != null) {
 			selectedMediaType = selectedMediaType.removeQualityValue();
+			// 遍历所有的HttpMessageConverter
 			for (HttpMessageConverter<?> converter : this.messageConverters) {
 				GenericHttpMessageConverter genericConverter = (converter instanceof GenericHttpMessageConverter ?
 						(GenericHttpMessageConverter<?>) converter : null);
 				if (genericConverter != null ?
 						((GenericHttpMessageConverter) converter).canWrite(declaredType, valueType, selectedMediaType) :
 						converter.canWrite(valueType, selectedMediaType)) {
+					// Aop advice前后增强
 					outputValue = getAdvice().beforeBodyWrite(outputValue, returnType, selectedMediaType,
 							(Class<? extends HttpMessageConverter<?>>) converter.getClass(),
 							inputMessage, outputMessage);

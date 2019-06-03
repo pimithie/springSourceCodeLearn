@@ -59,6 +59,7 @@ import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolv
  * @author Juergen Hoeller
  * @since 3.1
  */
+// 解析HandlerMethod方法参数中的@RequestBody和其返回值的@ResponseBody注解，（使用HttpMessageConverter）
 public class RequestResponseBodyMethodProcessor extends AbstractMessageConverterMethodProcessor {
 
 	/**
