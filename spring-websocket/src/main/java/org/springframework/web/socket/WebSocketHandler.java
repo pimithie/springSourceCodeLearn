@@ -32,6 +32,7 @@ package org.springframework.web.socket;
  * @author Phillip Webb
  * @since 4.0
  */
+// websocket信息与生命周期处理器
 public interface WebSocketHandler {
 
 	/**
@@ -40,6 +41,7 @@ public interface WebSocketHandler {
 	 * @throws Exception this method can handle or propagate exceptions; see class-level
 	 * Javadoc for details.
 	 */
+	// 在webSocket连接建立之后进行回调
 	void afterConnectionEstablished(WebSocketSession session) throws Exception;
 
 	/**
@@ -47,6 +49,7 @@ public interface WebSocketHandler {
 	 * @throws Exception this method can handle or propagate exceptions; see class-level
 	 * Javadoc for details.
 	 */
+	// 当一个新的websocket信息到达时调用
 	void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception;
 
 	/**
@@ -54,6 +57,7 @@ public interface WebSocketHandler {
 	 * @throws Exception this method can handle or propagate exceptions; see class-level
 	 * Javadoc for details.
 	 */
+	// 处理当前websocket信息传输错误
 	void handleTransportError(WebSocketSession session, Throwable exception) throws Exception;
 
 	/**
@@ -64,6 +68,7 @@ public interface WebSocketHandler {
 	 * @throws Exception this method can handle or propagate exceptions; see class-level
 	 * Javadoc for details.
 	 */
+	// 在websocket连接在一端关闭或者发生错误之后调用
 	void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception;
 
 	/**
@@ -75,6 +80,7 @@ public interface WebSocketHandler {
 	 * {@link org.springframework.web.socket.WebSocketMessage#isLast()} indicates if
 	 * the message is partial and whether it is the last part.
 	 */
+	// 当前websocket处理器是否支持处理一部分消息
 	boolean supportsPartialMessages();
 
 }

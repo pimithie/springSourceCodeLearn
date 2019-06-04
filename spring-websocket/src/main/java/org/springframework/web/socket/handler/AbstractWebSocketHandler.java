@@ -40,9 +40,11 @@ public abstract class AbstractWebSocketHandler implements WebSocketHandler {
 	@Override
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
 		if (message instanceof TextMessage) {
+			// 处理websocket文本信息
 			handleTextMessage(session, (TextMessage) message);
 		}
 		else if (message instanceof BinaryMessage) {
+			// 处理websocket二进制数据
 			handleBinaryMessage(session, (BinaryMessage) message);
 		}
 		else if (message instanceof PongMessage) {
@@ -53,6 +55,7 @@ public abstract class AbstractWebSocketHandler implements WebSocketHandler {
 		}
 	}
 
+	/*模板方法，子类实现*/
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 	}
 

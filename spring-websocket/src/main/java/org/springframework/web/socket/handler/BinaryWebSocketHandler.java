@@ -34,6 +34,7 @@ import org.springframework.web.socket.WebSocketSession;
  * @author Phillip Webb
  * @since 4.0
  */
+// 二进制websocket信息处理器
 public class BinaryWebSocketHandler extends AbstractWebSocketHandler {
 
 	@Override
