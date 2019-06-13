@@ -69,15 +69,18 @@ import org.springframework.util.TypeUtils;
  */
 public abstract class AbstractJackson2HttpMessageConverter extends AbstractGenericHttpMessageConverter<Object> {
 
+	// 默认的字符编码为UTF-8
 	public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-
+	// jackson的ObjectMapper
 	protected ObjectMapper objectMapper;
 
 	@Nullable
+	// 是否美化json的打印
 	private Boolean prettyPrint;
 
 	@Nullable
+	// json美化打印器
 	private PrettyPrinter ssePrettyPrinter;
 
 
@@ -152,11 +155,14 @@ public abstract class AbstractJackson2HttpMessageConverter extends AbstractGener
 
 	@Override
 	public boolean canRead(Type type, @Nullable Class<?> contextClass, @Nullable MediaType mediaType) {
+		// 如果不能进行读取，返回false
 		if (!canRead(mediaType)) {
 			return false;
 		}
+		// 获取对应的Java类型
 		JavaType javaType = getJavaType(type, contextClass);
 		AtomicReference<Throwable> causeRef = new AtomicReference<>();
+		// objectMapper如果能反序列化此Java类型，返回true
 		if (this.objectMapper.canDeserialize(javaType, causeRef)) {
 			return true;
 		}
@@ -166,10 +172,12 @@ public abstract class AbstractJackson2HttpMessageConverter extends AbstractGener
 
 	@Override
 	public boolean canWrite(Class<?> clazz, @Nullable MediaType mediaType) {
+		// 如果不能进行写出，返回false
 		if (!canWrite(mediaType)) {
 			return false;
 		}
 		AtomicReference<Throwable> causeRef = new AtomicReference<>();
+		// objectMapper如果能序列化此Java类型，返回true
 		if (this.objectMapper.canSerialize(clazz, causeRef)) {
 			return true;
 		}
