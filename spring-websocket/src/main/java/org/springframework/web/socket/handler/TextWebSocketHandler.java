@@ -37,6 +37,7 @@ import org.springframework.web.socket.WebSocketSession;
 public class TextWebSocketHandler extends AbstractWebSocketHandler {
 
 	@Override
+	// TextWebSocketHandler默认不支持处理二进制数据
 	protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
 		try {
 			session.close(CloseStatus.NOT_ACCEPTABLE.withReason("Binary messages not supported"));

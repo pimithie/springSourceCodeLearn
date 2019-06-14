@@ -40,6 +40,7 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
  * @author Rossen Stoyanchev
  * @since 4.0
  */
+// 将HttpSession域中属性复制到webSocket中，通过WebSocket.getAttributes()获取
 public class HttpSessionHandshakeInterceptor implements HandshakeInterceptor {
 
 	/**
@@ -48,11 +49,13 @@ public class HttpSessionHandshakeInterceptor implements HandshakeInterceptor {
 	 */
 	public static final String HTTP_SESSION_ID_ATTR_NAME = "HTTP.SESSION.ID";
 
-
+	// 指定的属性名
 	private final Collection<String> attributeNames;
 
+	// 是否复制所有的属性名
 	private boolean copyAllAttributes;
 
+	// 是否复制HttpSession的id
 	private boolean copyHttpSessionId = true;
 
 	private boolean createSession;
@@ -64,6 +67,7 @@ public class HttpSessionHandshakeInterceptor implements HandshakeInterceptor {
 	 * @see #setCopyAllAttributes
 	 * @see #setCopyHttpSessionId
 	 */
+	// 默认复制的属性到WebSocket中
 	public HttpSessionHandshakeInterceptor() {
 		this.attributeNames = Collections.emptyList();
 		this.copyAllAttributes = true;
@@ -76,6 +80,7 @@ public class HttpSessionHandshakeInterceptor implements HandshakeInterceptor {
 	 * @see #setCopyAllAttributes
 	 * @see #setCopyHttpSessionId
 	 */
+	// 复制指定的属性到WebSocket中
 	public HttpSessionHandshakeInterceptor(Collection<String> attributeNames) {
 		this.attributeNames = Collections.unmodifiableCollection(attributeNames);
 		this.copyAllAttributes = false;
@@ -142,9 +147,11 @@ public class HttpSessionHandshakeInterceptor implements HandshakeInterceptor {
 
 
 	@Override
+	// 在对websocket握手处理之前
 	public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
 			WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
 
+		// 将HttpSession中的属性复制到WebSocket中
 		HttpSession session = getSession(request);
 		if (session != null) {
 			if (isCopyHttpSessionId()) {

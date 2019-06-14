@@ -39,12 +39,14 @@ public interface WebSocketSession extends Closeable {
 	/**
 	 * Return a unique session identifier.
 	 */
+	// 获取当前的session的id
 	String getId();
 
 	/**
 	 * Return the URI used to open the WebSocket connection.
 	 */
 	@Nullable
+	// 获取当前的websocket的使用uri
 	URI getUri();
 
 	/**
@@ -61,6 +63,7 @@ public interface WebSocketSession extends Closeable {
 	 * WebSocketClient} handshake methods.
 	 * @return a Map with the session attributes (never {@code null})
 	 */
+	// 获取关联当前session的属性值
 	Map<String, Object> getAttributes();
 
 	/**

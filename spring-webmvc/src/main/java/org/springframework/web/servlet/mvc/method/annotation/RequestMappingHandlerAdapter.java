@@ -155,6 +155,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	// 消息转化器
 	private List<HttpMessageConverter<?>> messageConverters;
 
+	// Aop增强通知(针对@RequestBody,@ResponseBody)
 	private List<Object> requestResponseBodyAdvice = new ArrayList<>();
 
 	@Nullable

@@ -111,11 +111,13 @@ import org.springframework.util.StringUtils;
  * @see java.lang.reflect.AnnotatedElement#getAnnotation(Class)
  * @see java.lang.reflect.AnnotatedElement#getDeclaredAnnotations()
  */
+// 注解工具类
 public abstract class AnnotationUtils {
 
 	/**
 	 * The attribute name for annotations with a single element.
 	 */
+	// 注解单元素时的属性名为value
 	public static final String VALUE = "value";
 
 	private static final Map<AnnotationCacheKey, Annotation> findAnnotationCache =
