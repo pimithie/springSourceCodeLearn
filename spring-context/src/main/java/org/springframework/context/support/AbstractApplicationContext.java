@@ -131,6 +131,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * If none is supplied, message resolution is delegated to the parent.
 	 * @see MessageSource
 	 */
+	// message source bean的bean name属性
 	public static final String MESSAGE_SOURCE_BEAN_NAME = "messageSource";
 
 	/**
@@ -139,6 +140,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.context.LifecycleProcessor
 	 * @see org.springframework.context.support.DefaultLifecycleProcessor
 	 */
+	// 生命周期lifecycle处理器bean的bean name
 	public static final String LIFECYCLE_PROCESSOR_BEAN_NAME = "lifecycleProcessor";
 
 	/**
@@ -147,6 +149,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.context.event.ApplicationEventMulticaster
 	 * @see org.springframework.context.event.SimpleApplicationEventMulticaster
 	 */
+	// application事件多播器bean的bean name
 	public static final String APPLICATION_EVENT_MULTICASTER_BEAN_NAME = "applicationEventMulticaster";
 
 
@@ -161,6 +164,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	/** Unique id for this context, if any */
+	// 当前容器(context)的唯一id
 	private String id = ObjectUtils.identityToString(this);
 
 	/** Display name */
@@ -168,13 +172,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/** Parent context */
 	@Nullable
+	// 当前容器的父容器
 	private ApplicationContext parent;
 
 	/** Environment used by this context */
 	@Nullable
+	// 当前容器使用的Environment
 	private ConfigurableEnvironment environment;
 
 	/** BeanFactoryPostProcessors to apply on refresh */
+	// 与当前容器相关BeanFactoryPostProcessor
 	private final List<BeanFactoryPostProcessor> beanFactoryPostProcessors = new ArrayList<>();
 
 	/** System time in milliseconds when this context started */
@@ -191,13 +198,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/** Reference to the JVM shutdown hook, if registered */
 	@Nullable
+	// 向JVM中注册的shutdown hook
 	private Thread shutdownHook;
 
 	/** ResourcePatternResolver used by this context */
+	// Resource路径解析器
 	private ResourcePatternResolver resourcePatternResolver;
 
 	/** LifecycleProcessor for managing the lifecycle of beans within this context */
 	@Nullable
+	// 生命周期处理器
 	private LifecycleProcessor lifecycleProcessor;
 
 	/** MessageSource we delegate our implementation of this interface to */
@@ -206,9 +216,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/** Helper class used in event publishing */
 	@Nullable
+	// 事件多播器
 	private ApplicationEventMulticaster applicationEventMulticaster;
 
 	/** Statically specified listeners */
+	// applicationListeners
 	private final Set<ApplicationListener<?>> applicationListeners = new LinkedHashSet<>();
 
 	/** Local listeners registered before refresh */
