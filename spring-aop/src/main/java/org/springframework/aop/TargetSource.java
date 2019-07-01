@@ -43,6 +43,7 @@ public interface TargetSource extends TargetClassAware {
 	 */
 	@Override
 	@Nullable
+	// 当前targetSource对应的类型
 	Class<?> getTargetClass();
 
 	/**
@@ -52,6 +53,7 @@ public interface TargetSource extends TargetClassAware {
 	 * @return {@code true} if the target is immutable
 	 * @see #getTarget
 	 */
+	// getTarget方法返回的是否为相同的对象
 	boolean isStatic();
 
 	/**
@@ -62,6 +64,7 @@ public interface TargetSource extends TargetClassAware {
 	 * @throws Exception if the target object can't be resolved
 	 */
 	@Nullable
+	// 获取目标实例，去代替aop中真实的目标
 	Object getTarget() throws Exception;
 
 	/**
@@ -70,6 +73,7 @@ public interface TargetSource extends TargetClassAware {
 	 * @param target object obtained from a call to {@link #getTarget()}
 	 * @throws Exception if the object can't be released
 	 */
+	// 释放从getTarget中获得对象
 	void releaseTarget(Object target) throws Exception;
 
 }

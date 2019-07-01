@@ -43,12 +43,14 @@ public abstract class InstantiationAwareBeanPostProcessorAdapter implements Smar
 
 	@Override
 	@Nullable
+	// 预测postProcessBeforeInstantiation回调方法返回的bean的类型
 	public Class<?> predictBeanType(Class<?> beanClass, String beanName) throws BeansException {
 		return null;
 	}
 
 	@Override
 	@Nullable
+	// 确定候选的构造器
 	public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, String beanName) throws BeansException {
 		return null;
 	}
