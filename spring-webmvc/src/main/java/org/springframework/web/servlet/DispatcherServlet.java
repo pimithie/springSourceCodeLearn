@@ -147,6 +147,7 @@ import java.util.*;
 public class DispatcherServlet extends FrameworkServlet {
 
 	/** Well-known name for the MultipartResolver object in the bean factory for this namespace. */
+	// multipart resolver bean对应的bean name
 	public static final String MULTIPART_RESOLVER_BEAN_NAME = "multipartResolver";
 
 	/** Well-known name for the LocaleResolver object in the bean factory for this namespace. */
@@ -198,6 +199,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * Otherwise only the global web app context is obtainable by tags etc.
 	 * @see org.springframework.web.servlet.support.RequestContextUtils#findWebApplicationContext
 	 */
+	// put在ServletContext域中的key属性
 	public static final String WEB_APPLICATION_CONTEXT_ATTRIBUTE = DispatcherServlet.class.getName() + ".CONTEXT";
 
 	/**
@@ -252,22 +254,26 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * Name of the class path resource (relative to the DispatcherServlet class)
 	 * that defines DispatcherServlet's default strategy names.
 	 */
+	// 默认的策略配置路径
 	private static final String DEFAULT_STRATEGIES_PATH = "DispatcherServlet.properties";
 
 	/**
 	 * Common prefix that DispatcherServlet's default strategy attributes start with.
 	 */
+	// 默认的策略的前缀，eg：org.springframework.web.servlet.xxxx = yyy
 	private static final String DEFAULT_STRATEGIES_PREFIX = "org.springframework.web.servlet";
 
 	/** Additional logger to use when no mapped handler is found for a request. */
 	protected static final Log pageNotFoundLogger = LogFactory.getLog(PAGE_NOT_FOUND_LOG_CATEGORY);
 
+	// 读取到的默认的策略
 	private static final Properties defaultStrategies;
 
 	static {
 		// Load default strategy implementations from properties file.
 		// This is currently strictly internal and not meant to be customized
 		// by application developers.
+		// 读取默认的配置
 		try {
 			ClassPathResource resource = new ClassPathResource(DEFAULT_STRATEGIES_PATH, DispatcherServlet.class);
 			defaultStrategies = PropertiesLoaderUtils.loadProperties(resource);
@@ -278,12 +284,15 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/** Detect all HandlerMappings or just expect "handlerMapping" bean? */
+	// 侦测容器中所有的HandlerMapping实现类
 	private boolean detectAllHandlerMappings = true;
 
 	/** Detect all HandlerAdapters or just expect "handlerAdapter" bean? */
+	// 侦测容器中所有的HandlerAdapter实现类
 	private boolean detectAllHandlerAdapters = true;
 
 	/** Detect all HandlerExceptionResolvers or just expect "handlerExceptionResolver" bean? */
+	// 侦测容器中所有的HandlerExceptionResolver实现类
 	private boolean detectAllHandlerExceptionResolvers = true;
 
 	/** Detect all ViewResolvers or just expect "viewResolver" bean? */
@@ -310,14 +319,17 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/** List of HandlerMappings used by this servlet */
 	@Nullable
+	// 当前DispatcherServlet所使用的HandlerMapping
 	private List<HandlerMapping> handlerMappings;
 
 	/** List of HandlerAdapters used by this servlet */
 	@Nullable
+	// 当前DispatcherServlet所使用的HandlerAdapter
 	private List<HandlerAdapter> handlerAdapters;
 
 	/** List of HandlerExceptionResolvers used by this servlet */
 	@Nullable
+	// 当前DispatcherServlet所使用的HandlerExceptionResolver
 	private List<HandlerExceptionResolver> handlerExceptionResolvers;
 
 	/** RequestToViewNameTranslator used by this servlet */

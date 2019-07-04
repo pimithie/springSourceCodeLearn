@@ -87,6 +87,7 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 	@Nullable
 	private ConfigurableEnvironment environment;
 
+	// 必要的属性
 	private final Set<String> requiredProperties = new HashSet<>(4);
 
 
@@ -99,6 +100,7 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 	 * driven by a ServletConfig instance.
 	 * @param property name of the required property
 	 */
+	// 子类调用此方法去增加一个必要的属性
 	protected final void addRequiredProperty(String property) {
 		this.requiredProperties.add(property);
 	}
