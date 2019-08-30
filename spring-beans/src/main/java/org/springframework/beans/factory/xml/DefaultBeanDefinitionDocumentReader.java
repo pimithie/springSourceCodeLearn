@@ -171,16 +171,20 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * @param root the DOM root element of the document
 	 */
 	protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
+		// 判断xml的root结点是否为 beans
 		if (delegate.isDefaultNamespace(root)) {
+			// 获取xml中root结点下所有的结点
 			NodeList nl = root.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node node = nl.item(i);
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					if (delegate.isDefaultNamespace(ele)) {
+						// 解析root结点
 						parseDefaultElement(ele, delegate);
 					}
 					else {
+						// 解析其他非root结点的命名空间
 						delegate.parseCustomElement(ele);
 					}
 				}
