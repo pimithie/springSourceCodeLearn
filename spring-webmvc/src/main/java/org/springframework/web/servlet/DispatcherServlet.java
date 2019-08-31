@@ -584,7 +584,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	private void initHandlerMappings(ApplicationContext context) {
 		this.handlerMappings = null;
-
+		// 若配置了detectAllHandlerMappings，则DispatcherServlet在初始化时会获取容器(包括祖先容器)中
+		// 所有的类型为HandlerMapping的bean
 		if (this.detectAllHandlerMappings) {
 			// Find all HandlerMappings in the ApplicationContext, including ancestor contexts.
 			// 找到所有HandlerMapping的实现类，包括祖先容器，即根容器
@@ -608,6 +609,8 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Ensure we have at least one HandlerMapping, by registering
 		// a default HandlerMapping if no other mappings are found.
+		// 若最后DispatchServlet仍为有HandlerMapping组件，则会注册默认的handlerMapping组件
+		// 配置在DispatcherServlet.properties文件中
 		if (this.handlerMappings == null) {
 			// 获取默认的HandlerMapping
 			this.handlerMappings = getDefaultStrategies(context, HandlerMapping.class);
