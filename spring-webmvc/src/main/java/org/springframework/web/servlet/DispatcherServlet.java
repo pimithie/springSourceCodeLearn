@@ -582,6 +582,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * <p>If no HandlerMapping beans are defined in the BeanFactory for this namespace,
 	 * we default to BeanNameUrlHandlerMapping.
 	 */
+	// 初始化HandlerMapping组件，默认会从根容器和子容器中加载HandlerMapping接口的实现类
+	// ，若关闭则只会加载容器中bean name为handlerMapping的HandlerMapping接口的实现类
+	// 若最终依然没有HandlerMapping组件，则采用默认的配置(DispatcherServlet.properties配置文件中)
 	private void initHandlerMappings(ApplicationContext context) {
 		this.handlerMappings = null;
 		// 若配置了detectAllHandlerMappings，则DispatcherServlet在初始化时会获取容器(包括祖先容器)中
@@ -625,6 +628,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * <p>If no HandlerAdapter beans are defined in the BeanFactory for this namespace,
 	 * we default to SimpleControllerHandlerAdapter.
 	 */
+	// 初始化HandlerAdapter组件，默认会从根容器和子容器中加载HandlerAdapter接口的实现类
+	// ，若关闭则只会加载容器中bean name为handlerAdapter的HandlerAdapter接口的实现类
+	// 若最终依然没有HandlerAdapter组件，则采用默认的配置(DispatcherServlet.properties配置文件中)
 	private void initHandlerAdapters(ApplicationContext context) {
 		this.handlerAdapters = null;
 
@@ -663,6 +669,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * <p>If no bean is defined with the given name in the BeanFactory for this namespace,
 	 * we default to no exception resolver.
 	 */
+	// 初始化HandlerExceptionResolver组件，默认会从根容器和子容器中加载HandlerExceptionResolver接口的实现类
+	// ，若关闭则只会加载容器中bean name为handlerExceptionResolver的HandlerExceptionResolver接口的实现类
+	// 若最终依然没有HandlerExceptionResolver组件，则采用默认的配置(DispatcherServlet.properties配置文件中)
 	private void initHandlerExceptionResolvers(ApplicationContext context) {
 		this.handlerExceptionResolvers = null;
 
@@ -728,6 +737,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * <p>If no ViewResolver beans are defined in the BeanFactory for this
 	 * namespace, we default to InternalResourceViewResolver.
 	 */
+	// 初始化ViewResolver组件，默认会从根容器和子容器中加载ViewResolver接口的实现类
+	// ，若关闭则只会加载容器中bean name为viewResolver的ViewResolver接口的实现类
+	// 若最终依然没有ViewResolver组件，则采用默认的配置(DispatcherServlet.properties配置文件中)
 	private void initViewResolvers(ApplicationContext context) {
 		this.viewResolvers = null;
 
