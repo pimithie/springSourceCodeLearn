@@ -177,9 +177,7 @@ abstract class SelectedValueComparator {
 					convertedValueCache.put(editor, candidateAsValue);
 				}
 			}
-			if (ObjectUtils.nullSafeEquals(boundValue, candidateAsValue)) {
-				return true;
-			}
+			return ObjectUtils.nullSafeEquals(boundValue, candidateAsValue);
 		}
 		return false;
 	}

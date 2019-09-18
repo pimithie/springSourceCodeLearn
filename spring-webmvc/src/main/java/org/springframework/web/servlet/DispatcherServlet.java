@@ -746,7 +746,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		if (this.detectAllViewResolvers) {
 			// Find all ViewResolvers in the ApplicationContext, including ancestor contexts.
 			// 从子容器和根容器获取所有的ViewResolver实现类
-			Map<Storing, ViewResolver> matchingBeans =
+			Map<String, ViewResolver> matchingBeans =
 					BeanFactoryUtils.beansOfTypeIncludingAncestors(context, ViewResolver.class, true, false);
 			if (!matchingBeans.isEmpty()) {
 				this.viewResolvers = new ArrayList<>(matchingBeans.values());
@@ -996,7 +996,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			Exception dispatchException = null;
 
 			try {
-				// 检验是否为mutilpart数据，如文件上传
+				// 检验是否为multipart数据，如文件上传
 				processedRequest = checkMultipart(request);
 				multipartRequestParsed = (processedRequest != request);
 
@@ -1032,7 +1032,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				// Actually invoke the handler.
-				// 调用HandlerExcutionChain，返回modelAndView对象
+				// 调用HandlerExecutionChain，返回modelAndView对象
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
 				if (asyncManager.isConcurrentHandlingStarted()) {

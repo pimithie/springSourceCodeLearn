@@ -478,9 +478,7 @@ public class SelectTag extends AbstractHtmlInputElementTag {
 		}
 		else if (bindStatus.getEditor() != null) {
 			Object editorValue = bindStatus.getEditor().getValue();
-			if (editorValue != null && typeRequiresMultiple(editorValue.getClass())) {
-				return true;
-			}
+			return editorValue != null && typeRequiresMultiple(editorValue.getClass());
 		}
 		return false;
 	}
