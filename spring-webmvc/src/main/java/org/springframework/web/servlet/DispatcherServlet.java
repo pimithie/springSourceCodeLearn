@@ -746,7 +746,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		if (this.detectAllViewResolvers) {
 			// Find all ViewResolvers in the ApplicationContext, including ancestor contexts.
 			// 从子容器和根容器获取所有的ViewResolver实现类
-			Map<String, ViewResolver> matchingBeans =
+			Map<Storing, ViewResolver> matchingBeans =
 					BeanFactoryUtils.beansOfTypeIncludingAncestors(context, ViewResolver.class, true, false);
 			if (!matchingBeans.isEmpty()) {
 				this.viewResolvers = new ArrayList<>(matchingBeans.values());
