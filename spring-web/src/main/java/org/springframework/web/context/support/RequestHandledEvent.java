@@ -133,10 +133,9 @@ public class RequestHandledEvent extends ApplicationEvent {
 	 * the most important context data.
 	 */
 	public String getShortDescription() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("session=[").append(this.sessionId).append("]; ");
-		sb.append("user=[").append(this.userName).append("]; ");
-		return sb.toString();
+		String sb = "session=[" + this.sessionId + "]; " +
+				"user=[" + this.userName + "]; ";
+		return sb;
 	}
 
 	/**

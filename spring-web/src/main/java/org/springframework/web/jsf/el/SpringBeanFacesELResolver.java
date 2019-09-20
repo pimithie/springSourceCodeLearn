@@ -121,9 +121,7 @@ public class SpringBeanFacesELResolver extends ELResolver {
 		if (base == null) {
 			String beanName = property.toString();
 			WebApplicationContext wac = getWebApplicationContext(elContext);
-			if (wac.containsBean(beanName)) {
-				return true;
-			}
+			return wac.containsBean(beanName);
 		}
 		return false;
 	}

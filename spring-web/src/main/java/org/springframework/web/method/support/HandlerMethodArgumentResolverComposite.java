@@ -66,9 +66,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	// 批量添加HandlerMethodArgumentResolver
 	public HandlerMethodArgumentResolverComposite addResolvers(@Nullable HandlerMethodArgumentResolver... resolvers) {
 		if (resolvers != null) {
-			for (HandlerMethodArgumentResolver resolver : resolvers) {
-				this.argumentResolvers.add(resolver);
-			}
+			Collections.addAll(this.argumentResolvers, resolvers);
 		}
 		return this;
 	}
@@ -81,9 +79,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 			@Nullable List<? extends HandlerMethodArgumentResolver> resolvers) {
 
 		if (resolvers != null) {
-			for (HandlerMethodArgumentResolver resolver : resolvers) {
-				this.argumentResolvers.add(resolver);
-			}
+			this.argumentResolvers.addAll(resolvers);
 		}
 		return this;
 	}

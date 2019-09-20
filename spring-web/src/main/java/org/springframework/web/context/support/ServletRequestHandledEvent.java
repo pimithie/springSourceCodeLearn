@@ -161,22 +161,20 @@ public class ServletRequestHandledEvent extends RequestHandledEvent {
 
 	@Override
 	public String getShortDescription() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("url=[").append(getRequestUrl()).append("]; ");
-		sb.append("client=[").append(getClientAddress()).append("]; ");
-		sb.append(super.getShortDescription());
-		return sb.toString();
+		String sb = "url=[" + getRequestUrl() + "]; " +
+				"client=[" + getClientAddress() + "]; " +
+				super.getShortDescription();
+		return sb;
 	}
 
 	@Override
 	public String getDescription() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("url=[").append(getRequestUrl()).append("]; ");
-		sb.append("client=[").append(getClientAddress()).append("]; ");
-		sb.append("method=[").append(getMethod()).append("]; ");
-		sb.append("servlet=[").append(getServletName()).append("]; ");
-		sb.append(super.getDescription());
-		return sb.toString();
+		String sb = "url=[" + getRequestUrl() + "]; " +
+				"client=[" + getClientAddress() + "]; " +
+				"method=[" + getMethod() + "]; " +
+				"servlet=[" + getServletName() + "]; " +
+				super.getDescription();
+		return sb;
 	}
 
 	@Override

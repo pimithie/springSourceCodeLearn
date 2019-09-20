@@ -56,7 +56,7 @@ public class CorsConfiguration {
 			Collections.unmodifiableList(Arrays.asList(HttpMethod.GET, HttpMethod.HEAD));
 
 	private static final List<String> DEFAULT_PERMIT_ALL =
-			Collections.unmodifiableList(Arrays.asList(ALL));
+			Collections.unmodifiableList(Collections.singletonList(ALL));
 
 	private static final List<String> DEFAULT_PERMIT_METHODS =
 			Collections.unmodifiableList(Arrays.asList(HttpMethod.GET.name(), HttpMethod.HEAD.name(), HttpMethod.POST.name()));
